@@ -1,5 +1,0 @@
-2025-01-22 15:13:46 [   DEBUG]              main.py : Debug
-2025-01-22 15:13:46 [    INFO]              main.py : Info
-2025-01-22 15:13:46 [ WARNING]              main.py : Warn
-2025-01-22 15:13:46 [   ERROR]              main.py : Error
-2025-01-22 15:13:46 [CRITICAL]              main.py : Critical
