@@ -3,6 +3,8 @@ from datetime import datetime
 import logging
 from logging.config import fileConfig
 
+import fenster
+
 
 # ----------
 # logging
@@ -59,12 +61,16 @@ if len(logfiles) > 5:
 del logfiles
 
 
+# ----------
+# main
+# ----------
+
+
+from StartFenster import StartFenster
+
+
 def main():
-    logging.debug("Debug")
-    logging.info("Info")
-    logging.warning("Warn")
-    logging.error("Error")
-    logging.critical("Critical")
+    startfenster = StartFenster()
 
 
 if __name__ == "__main__": 
