@@ -3,8 +3,9 @@
 ---
 
 ## 22.01.2025
-- Ausarbeirung Pflichtenheft
-- Eineichtung der Programmierungebung
+- Ausarbeitung Pflichtenheft
+- Einrichtung der Programmierungebung
+  - bestehenden Logger hinzugfuegt
 - Implementierung einfaches Fenster
 
 ## 29.01.2025
