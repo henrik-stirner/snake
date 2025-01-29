@@ -16,6 +16,7 @@
   - Power-ups
 - Sounds
 - Animationen
+- weitere Eingabeoptionen
 
 ### Abgrenzungskriterien
 - Levels
@@ -37,7 +38,7 @@
 - Snake- / Retro-Fans
 
 ### Betriebsbedingungen
-- Tastatur / Controller / ...
+- Tastatur
 - Spieler ständig anwesend (im Spiel, sonst Spielende)
 
 ---
@@ -107,6 +108,9 @@
     - Zeit wird knapp
     - etc.
 - Animationen
+- weitere Eingabeoptionen
+  - veränderbare Tastenbelegung
+  - controller
 
 ### Abgrenzungsfunktionen
 - Levels
@@ -167,3 +171,21 @@
 - angemessene Farbgebung
   - aesthetisch
   - funktional
+
+---
+
+# Meilensteine
+
+## Technologien
+1. grafische Benutzeroberflaeche
+2. Spiellogik
+3. persistenter Speicher
+4. Zusatzfunktionen
+
+
+## Funktionen
+1. Spielefenster
+2. Einstellungen (Konfigurationsdatei)
+3. Startfenster
+4. Einstellungsfenster
+5. Zusatzfunktionen
