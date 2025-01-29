@@ -114,8 +114,17 @@
 
 ### Abgrenzungsfunktionen
 - Levels
+  - hardgecodete oder prezedual generierte Level
+  - ausgereifte Schwierigkeitssteigerung
 - Online-Multiplayer
+  - Verbindung übers Internet
+  - Vielspielermodus
 - maschinelles Lernen
+  - computergesteuerter Gegner
+  - verschiedene Szenarien
+    - Feldgroesse
+    - Objektive
+    - Zusatzfunktionen
 
 --- 
 
