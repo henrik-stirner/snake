@@ -17,24 +17,26 @@
 
 ## 12.02.2025
 - Beginn der Implementierung
+- Planung der Programmstruktur
 
 ## 19.02.2025
-
+- grafische Benutzeroberflaeche
 
 ## 26.02.2025
-
+- Spiellogik
 
 ## 05.03.2025
-
+- persistenter Spiecher
+  - Scotes
+  - Einstellungen
 
 ## 12.03.2025
-
-
-## ABGABE: 19.03.2025
-
-
-## PRAESENTATION: 26.03.2025
-
+- Zusatzfunktionen
 
 ---
 
+## ABGABE: 19.03.2025
+
+## PRAESENTATION: 26.03.2025
+
+---
