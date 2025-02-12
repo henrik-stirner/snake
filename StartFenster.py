@@ -1,44 +1,57 @@
 import tkinter as tk
+from configparser import ConfigParser
 
 
-def main(): 
+config = ConfigParser()
+config.read("./config.ini")
+
+def start_fenster():
     root = tk.Tk()
 
-    root.title("Tk Example")
+    root.title("Snake")
     root.configure(background="black")
-    root.minsize(1600, 900)
-    root.geometry("1600x900+100+100")
+    # root.minsize(config["Window"]["w"], config["Window"]["h"])
+    root.geometry(f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}")
 
-    main_frame = tk.Frame(root, bg="black", padx=100, pady=100)
-    main_frame.grid(row=0, column=0)  # Hier grid() anstelle von pack() verwenden
-    
     # Schlange
 
-    schlange_frame = tk.Frame(main_frame, bg="black")
-    schlange_frame.grid(row=0, column=0)
-    
-    s_label = tk.Label(schlange_frame, width=10, height=10, text="S", bg="darkgreen")
-    s_label.grid(row=0, column=0)
-    n_label = tk.Label(schlange_frame, width=10, height=10, text="N", bg="lightgreen")
-    n_label.grid(row=0, column=1)
-    a_label = tk.Label(schlange_frame, width=10, height=10, text="A", bg="lightgreen")
-    a_label.grid(row=0, column=2)
-    k_label = tk.Label(schlange_frame, width=10, height=10, text="K", bg="lightgreen")
-    k_label.grid(row=0, column=3)
-    e_label = tk.Label(schlange_frame, width=10, height=10, text="E", bg="lightgreen")
-    e_label.grid(row=0, column=4)
-    
-    # Ranking
+    schlange_frame = tk.Frame(root)
+    schlange_frame.pack(expand=True)
 
-    ranking_frame = tk.Frame(main_frame, bg="black")
-    ranking_frame.grid(row=1, column=0)
-    
+    schlange = tk.Frame(schlange_frame, width=500, height=100)
+    schlange.grid_columnconfigure(tuple(range(5)), weight=1)
+    schlange.grid_rowconfigure(0, weight=1)
+    schlange.pack_propagate(0)
+    schlange.pack()
+
+    farbe = 0x2EbA18
+    for buchstabe in "SNAKE":
+        buchstabe_label = tk.Label(schlange, text=buchstabe, font=config["Font"]["text"],
+                                   fg="white", bg=f"#{hex(farbe).removeprefix('0x')}")
+        buchstabe_label.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+        farbe += 16
+
     # Startknopf
 
-    start_knopf = tk.Button(main_frame, bg="darkgrey", activebackground="#3e393e", width=16, height=9, text="START",font="Arial 16 bold")
-    start_knopf.grid(row=2, column=0)
-    
+    start_knopf = tk.Button(root, text="START", font=config["Font"]["huge"], height=5,
+                            bg="black", fg="white", activeforeground="black", activebackground="white",
+                            highlightthickness=0, bd=0)
+    start_knopf.pack(fill=tk.X)
+
+    # Ranking
+
+    ranking_frame = tk.Frame(root, bg="black")
+    ranking_frame.pack(expand=True)
+
+    for i in range(5):
+        score_label = tk.Label(ranking_frame, text="Score [Name] und weitere Daten", font=config["Font"]["head"],
+                               fg="white", bg="black")
+        score_label.pack(expand=True, fill=tk.BOTH)
+
     root.mainloop()
+
+def main(): 
+    start_fenster()
 
 
 if __name__ == "__main__": 
