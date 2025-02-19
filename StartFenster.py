@@ -1,154 +1,235 @@
+from typing import *
+
+from os import walk, remove
+from datetime import datetime
+import logging
+from logging.config import fileConfig
+
+from configparser import ConfigParser
+
 from tkinter import *
 from tkinter import messagebox
 # from tkinter.ttk import *  # FÜR STYLES!!!
 
-from configparser import ConfigParser
+from random import randint
+from time import sleep
 
 from utils import *
+
+
+# ----------
+# logging
+# ----------
+
+
+"""
+----------
+USAGE
+----------
+display output for ordinary cli:
+    print()
+report events (status monitoring, fault investigation):
+    logger.info() or
+    logger.debug() for detailed output
+issue warnings (particular runtime events):
+    issue is avoidable and the code should be modified:
+        warnings.warn()
+    the event should be noticed, but there is nothing you can do about it:
+        logger.warning()
+report errors (particular runtime events):
+    catch Error/
+    raise MostSpecificError()
+report suppressed errors without raising exceptions:
+    logger.error() or
+    logger.exception() or
+    logger.critical()
+----------
+"""
+
+
+logging.config.fileConfig(
+            './logger.ini',
+            encoding='utf-8',
+            defaults={
+                'logfilename':
+                    f'./logs/{datetime.now().strftime("%Y-%m-%d_-_%H-%M-%S")}.log'
+            }
+        )
+logger = logging.getLogger(__name__)
+
+# only keep up to 5 log files
+logfiles = list(filter(
+    lambda file: file.endswith('.log') or file.split('.')[-1].isdigit(),
+    next(walk('./logs/'), (None, None, []))[2]
+))
+if len(logfiles) > 5:
+    for logfile in logfiles[0:len(logfiles) - 5]:
+        remove(f'./logs/{logfile}')
+del logfiles
+
+
+# ----------
+# config
+# ----------
 
 
 config = ConfigParser()
 config.read("./config.ini")
 
 
-class Launcher:
-    def __init__(self) -> None:
-        self.launcher_fenster = Tk()
-
-        self.launcher_fenster.title("Launcher")
-        self.launcher_fenster.configure(background="black")
-        # root.minsize(config["Window"]["w"], config["Window"]["h"])
-        self.launcher_fenster.geometry(
-            f"{config['Window']['w']}x{config['Window']['h']}+{config['Window']['x']}+{config['Window']['y']}"
-        )
-
-        self.interface_generieren()
-
-        self.launcher_fenster.mainloop()
-
-    def interface_generieren(self) -> None:
-        # Schlange
-
-        self.schlange_frame = Frame(self.launcher_fenster)
-        self.schlange_frame.pack(expand=True)
-
-        self.schlange = Frame(self.schlange_frame, width=500, height=100)
-        self.schlange.grid_columnconfigure(tuple(range(5)), weight=1)
-        self.schlange.grid_rowconfigure(0, weight=1)
-        self.schlange.pack_propagate(0)
-        self.schlange.pack()
-
-        farbe = 0x2EbA18
-        for buchstabe in "SNAKE":
-            buchstabe_label = Label(self.schlange, text=buchstabe, font=config["Font"]["text"],
-                                    fg="white", bg=f"#{hex(farbe).removeprefix('0x')}")
-            buchstabe_label.pack(side=LEFT, expand=True, fill=BOTH)
-            farbe += 16
-
-        # Startknopf
-
-        self.start_knopf = Button(self.launcher_fenster, command=self._on_start,
-                                  text="START", font=config["Font"]["huge"], height=5,
-                                  bg="black", fg="white", activeforeground="black", activebackground="white",
-                                  highlightthickness=0, bd=0)
-        self.start_knopf.pack(fill=X)
-
-        # Ranking
-
-        self.ranking_frame = Frame(self.launcher_fenster, bg="black")
-        self.ranking_frame.pack(expand=True)
-
-        for i in range(5):
-            score_label = Label(self.ranking_frame, text="Score [Name] und weitere Daten", font=config["Font"]["head"],
-                                   fg="white", bg="black")
-            score_label.pack(expand=True, fill=BOTH)
-
-    def _on_start(self):
-        self.launcher_fenster.withdraw()  # launcher_fenster verstecken
-        SpielFenster(self.launcher_fenster)
+# ----------
+# game
+# ----------
 
 
 class SpielObjekt:
-    def __init__(self, x, y, farbe):
+    def __init__(self, spiel, x, y, farbe, lebensdauer=None):
+        self.spiel = spiel
+
         self.x = x
         self.y = y
+
         self.farbe = farbe
 
-    def aktualisieren(self, **kwargs):
-        pass
+        self.tot = False
+        self.lebensdauer: int | None = lebensdauer
+
+    def aktualisieren(self):
+        if self.lebensdauer is not None:
+            if self.lebensdauer == 0:
+                self.farbe = "black"
+                self.tot = True
+            else:
+                self.lebensdauer -= 1
+
+    def malen(self):
+        self.spiel.spiel_fenster.kachel_faerben(self.x, self.y, self.farbe)
 
 
-class SchlangenKopf(SpielObjekt):
-    def __init__(self, spielfenster, x, y):
-        super.__init__(x, y, "darkgreen")
-
-        # links, rechts, oben, unten
-        self.richtung: str
-        self.glieder = []
-
-    def aktualisieren(self, richtung):
-        neues_schlangenglied = SchlangenGlied(self)
-        self.glieder.append(neues_schlangenglied)
-
-        if richtung:
-            self.richtung = richtung
-
-        match self.richtung:
-            case "l":
-                self.x -= 1
-            case "r":
-                self.x += 1
-            case "o":
-                self.y += 1
-            case "u":
-                self.y -= 1
+class Apfel(SpielObjekt):
+    def __init__(self, spiel, x, y):
+        super().__init__(spiel, x, y, "red")
 
 
 class SchlangenGlied(SpielObjekt):
-    def __init__(self, schlangenkopf):
-        super().__init__(schlangenkopf.x, schlangenkopf.y, "darkgreen")
+    def __init__(self, spiel, schlangenkopf, lebensdauer):
+        super().__init__(spiel, schlangenkopf.x, schlangenkopf.y, "lightgreen", lebensdauer=lebensdauer)
+
+
+class SchlangenKopf(SpielObjekt):
+    def __init__(self, spiel, x, y, richtung, laenge):
+        super().__init__(spiel, x, y, "darkgreen")
+
+        # links, rechts, oben, unten
+        self.richtung = richtung
+        self.laenge = laenge
+
+    def aktualisieren(self):
+        super().aktualisieren()
+
+        if self.laenge:
+            neues_schlangenglied = SchlangenGlied(self.spiel, self, self.laenge)
+            self.spiel.spielobjekte.append(neues_schlangenglied)
+
+        match self.richtung:
+            case "l":
+                if self.x > 0:
+                    self.x -= 1
+            case "r":
+                if self.x < self.spiel.spiel_fenster.w-1:
+                    self.x += 1
+            case "o":
+                if self.y > 0:
+                    self.y -= 1
+            case "u":
+                if self.y < self.spiel.spiel_fenster.h-1:
+                    self.y += 1
+
+        # TODO: Kollisionen
 
 
 class Spiel:
-    def __init__(self, spielfenster):
-        self.spielfenster = spielfenster
+    spielobjekte = []
 
-        self.spielobjekte = []
-        self.schlangenkopf = SpielObjekt(spielfenster, spielfenster.w // 2, spielfenster.h // 2, "darkgreen")
-        self.spielobjekte.append(self.schlangenkopf)
-        self.spielobjekte.append(self.schlangenkopf.glieder)
+    def __init__(self, spiel_fenster):
+        self.spiel_fenster = spiel_fenster
 
-        while True:
-            self.aktualisieren()
+        self.schlange = SchlangenKopf(self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
+        self.apfel = Apfel(self, *self.zufaelliges_freies_feld())
+
+        self.spielobjekte += [self.schlange, self.apfel]
 
     def aktualisieren(self):
-        if "q" in self.spielfenster.eingaben:
-            self.spielfenster.window_exit()
+        if self.spiel_fenster.eingaben:
+            if "\x1b" in self.spiel_fenster.eingaben:  # Escape
+                self.spiel_fenster.window_exit()
 
-        eingabe = self.spielfenster.eingaben[0]
+            eingabe = self.spiel_fenster.eingaben.pop(0)
+            match eingabe:
+                case "w":
+                    self.schlange.richtung = "o"
+                case "a":
+                    self.schlange.richtung = "l"
+                case "s":
+                    self.schlange.richtung = "u"
+                case "d":
+                    self.schlange.richtung = "r"
+
         for spielobjekt in self.spielobjekte:
-            spielobjekt.aktualisieren(eingabe)
-        self.spielfenster.eingaben.pop(0)
+            spielobjekt.aktualisieren()
+            spielobjekt.malen()
 
-        self.spielfenster.update_idletasks()
+        for spielobjekt in self.spielobjekte:
+            if spielobjekt.tot:
+                self.spielobjekte.remove(spielobjekt)
+
+    def zufaelliges_feld(self):
+        x = randint(0, self.spiel_fenster.w-1)
+        y = randint(0, self.spiel_fenster.h-1)
+
+        return x, y
+
+    def feld_frei(self, x, y):
+        for spielobjekt in self.spielobjekte:
+            if x == spielobjekt.x and y == spielobjekt.y:
+                return False
+
+        return True
+
+    def zufaelliges_freies_feld(self):
+        x, y = self.zufaelliges_feld()
+        # TODO: Was, wenn kein Feld mehr frei ist?
+        while not self.feld_frei(x, y):
+            x, y = self.zufaelliges_feld()
+
+        return x, y
 
 
-class SpielFenster:
-    def __init__(self, root: Tk) -> None:
-        self.spiel_fenster = Toplevel(root)
-        self.spiel_fenster.title("Spiel")
-        self.spiel_fenster.configure(background="black")
+class SpielFenster(Tk):
+    w, h = int(config["Game"]["w"]), int(config["Game"]["h"])
+    delay = float(config["Game"]["delay"])
+    erlaubte_tasten = "wasd"
+    eingaben = []
+
+    def __init__(self, launcher_fenster) -> None:
+        super().__init__()
+        self.focus_force()
+
+        self.launcher_fenster = launcher_fenster
+
+        self.spiel = Spiel(self)
+
+        self.title("Spiel")
+        self.configure(background="black")
         # root.minsize(config["Window"]["w"], config["Window"]["h"])
-        self.spiel_fenster.geometry(
+        self.geometry(
             f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
         )
-        self.spiel_fenster.protocol("WM_DELETE_WINDOW", self._window_exit)
+        self.protocol("WM_DELETE_WINDOW", self.window_exit)
 
-        self.w, self.h = int(config["Game"]["w"]), int(config["Game"]["h"])
-
-        self.spielfeld = Frame(self.spiel_fenster)
-        self.spielfeld.grid_rowconfigure(tuple(range(self.h)), weight=1)  # expand
-        self.spielfeld.grid_columnconfigure(tuple(range(self.w)), weight=1)
+        self.spielfeld = Frame(self)
+        self.spielfeld.grid_columnconfigure(tuple(range(self.w)), weight=1)  # expand
+        self.spielfeld.grid_rowconfigure(tuple(range(self.h)), weight=1)
         self.spielfeld.pack(expand=True, fill=BOTH)
 
         # Farbe der Labels beim Hovern veraender, sodass man das Raster besser erkennen kann (interaktiver)
@@ -177,27 +258,108 @@ class SpielFenster:
                 kachel.bind("<Enter>", lambda event, obj=kachel: on_enter(obj, event))
                 kachel.bind("<Leave>", lambda event, obj=kachel: on_leave(obj, event))
 
-        eine_kachel = self._kachel(3, 5)
-        eine_kachel.config(bg="red")  # ein label rot, um zu sehen, ob es funktioniert
+        # Eingaben verarbeiten
+        def bei_tastendruck(event):
+            taste = event.char
+            if taste in self.erlaubte_tasten:
+                self.eingaben.append(taste)
+                logger.info(self.eingaben)
 
-        # EINGABEN
-        eingaben = []
+        self.bind('<Key>', bei_tastendruck)
 
-        def tastendruck(event):
-            taste = event.key
-            self.eingaben.append(taste)
-            print(taste)
+        # modifizierte Hauptschleife, die auch Spiellogik ausfuehrt
+        self.running = True
 
-        root.bind('<Key>', tastendruck)
+        while self.running:
+            self.hauptschleife()
 
-    def kachel(self, row: int, column: int):
-        return self.spielfeld.grid_slaves(row, column)[0]  # Es gibt nur ein Objekt in der Zelle, und das ist der Frame.
+    def _kachel(self, column: int, row: int):
+        return self.spielfeld.grid_slaves(column=column, row=row)[0]  # Es gibt nur ein Objekt in der Zelle, und das ist der Frame.
+
+    def kachel_faerben(self, x, y, farbe):
+        kachel = self._kachel(x, y)
+        kachel.config(bg=farbe)
 
     def window_exit(self):
         close = messagebox.askyesno("Beenden?", "Wollen Sie das Spiel wirklich beenden?")
 
         if close:
-            self.spiel_fenster.destroy()
+            self.running = False
+            self.destroy()
+            self.launcher_fenster.deiconify()  # launcher_fenster wieder anzeigen
+
+    def hauptschleife(self):
+        try:
+            self.spiel.aktualisieren()
+        except Exception as e:
+            logger.error(e)
+
+        self.update_idletasks()
+        self.update()
+
+        sleep(self.delay)
+
+
+class Launcher(Tk):
+    def __init__(self) -> None:
+        super().__init__()
+        self.focus_force()
+
+        self.title("Launcher")
+        self.configure(background="black")
+        # root.minsize(config["Window"]["w"], config["Window"]["h"])
+        self.geometry(
+            f"{config['Window']['w']}x{config['Window']['h']}+{config['Window']['x']}+{config['Window']['y']}"
+        )
+
+        self.interface_generieren()
+
+        self.mainloop()
+
+    def interface_generieren(self) -> None:
+        # Schlange
+
+        self.schlange_frame = Frame(self)
+        self.schlange_frame.pack(expand=True)
+
+        self.schlange = Frame(self.schlange_frame, width=500, height=100)
+        self.schlange.grid_columnconfigure(tuple(range(5)), weight=1)
+        self.schlange.grid_rowconfigure(0, weight=1)
+        self.schlange.pack_propagate(0)
+        self.schlange.pack()
+
+        farbe = 0x2EbA18
+        for buchstabe in "SNAKE":
+            buchstabe_label = Label(self.schlange, text=buchstabe, font=config["Font"]["text"],
+                                    fg="white", bg=f"#{hex(farbe).removeprefix('0x')}")
+            buchstabe_label.pack(side=LEFT, expand=True, fill=BOTH)
+            farbe += 16
+
+        # Startknopf
+
+        self.start_knopf = Button(self, command=self._on_start,
+                                  text="START", font=config["Font"]["huge"], height=5,
+                                  bg="black", fg="white", activeforeground="black", activebackground="white",
+                                  highlightthickness=0, bd=0)
+        self.start_knopf.pack(fill=X)
+
+        # Ranking
+
+        self.ranking_frame = Frame(self, bg="black")
+        self.ranking_frame.pack(expand=True)
+
+        with open("scores.txt", "r") as lesedatei:
+            highscores = [(int(zeile.split()[0]), zeile) for zeile in lesedatei.readlines()]
+            highscores.sort(key=lambda x: x[0], reverse=True)
+
+            for highscore in highscores[:5]:
+                score_label = Label(self.ranking_frame, text=highscore[1], font=config["Font"]["head"],
+                                    fg="white", bg="black")
+                score_label.pack(expand=True, fill=BOTH)
+
+    def _on_start(self):
+        self.withdraw()  # launcher_fenster verstecken
+        SpielFenster(self)
 
 
 def main(): 
