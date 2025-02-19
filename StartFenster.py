@@ -19,7 +19,7 @@ class Launcher:
         self.launcher_fenster.configure(background="black")
         # root.minsize(config["Window"]["w"], config["Window"]["h"])
         self.launcher_fenster.geometry(
-            f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
+            f"{config['Window']['w']}x{config['Window']['h']}+{config['Window']['x']}+{config['Window']['y']}"
         )
 
         self.interface_generieren()
@@ -66,6 +66,48 @@ class Launcher:
     def _on_start(self):
         self.launcher_fenster.withdraw()  # launcher_fenster verstecken
         SpielFenster(self.launcher_fenster)
+
+
+class SpielObjekt:
+    def __init__(self, spielfenster, x, y, farbe):
+        self.spielfenster = spielfenster
+        self.x = x
+        self.y = y
+        self.farbe = farbe
+
+    def aktualisieren(self):
+        pass
+
+
+class SchlangenKopf(SpielObjekt):
+    def __init__(self, spielfenster, x, y):
+        super.__init__(spielfenster, x, y, "darkgreen")
+
+    def aktualisieren(self):
+
+
+
+class SchlangenGlied(SpielObjekt):
+    def __init__(self, schlangenkopf):
+        super().__init__(schlangenkopf.spielfenster, schlangenkopf.x, schlangenkopf.y, "darkgreen")
+
+
+
+
+class Spiel:
+    def __init__(self, spielfenster):
+        self.spielfenster = spielfenster
+
+        self.spielobjekte = []
+        self.schlangenkopf = SpielObjekt(spielfenster.w // 2, spielfenster.h // 2, "darkgreen")
+        self.spielobjekte.append(self.schlangenkopf)
+
+    def aktualisieren(self):
+        for spielobjekt in self.spielobjekte:
+            spielobjekt.aktualisieren()
+
+        self.spielfenster.update_idletasks()
+
 
 
 class SpielFenster:
@@ -115,11 +157,17 @@ class SpielFenster:
         eine_kachel = self._kachel(3, 5)
         eine_kachel.config(bg="red")  # ein label rot, um zu sehen, ob es funktioniert
 
-    def _kachel(self, row: int, column: int):
+        # EINGABEN
+        def key_press(event):
+            
+
+        root.bind('<Key>', key_press)
+
+    def kachel(self, row: int, column: int):
         return self.spielfeld.grid_slaves(row, column)[0]  # Es gibt nur ein Objekt in der Zelle, und das ist der Frame.
 
     def _window_exit(self):
-        close = messagebox.askyesno("Beenden?", "Wollen Sie das Speil wirklich beenden?")
+        close = messagebox.askyesno("Beenden?", "Wollen Sie das Spiel wirklich beenden?")
 
         if close:
             self.spiel_fenster.destroy()
