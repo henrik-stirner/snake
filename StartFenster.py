@@ -69,29 +69,44 @@ class Launcher:
 
 
 class SpielObjekt:
-    def __init__(self, spielfenster, x, y, farbe):
-        self.spielfenster = spielfenster
+    def __init__(self, x, y, farbe):
         self.x = x
         self.y = y
         self.farbe = farbe
 
-    def aktualisieren(self):
+    def aktualisieren(self, **kwargs):
         pass
 
 
 class SchlangenKopf(SpielObjekt):
     def __init__(self, spielfenster, x, y):
-        super.__init__(spielfenster, x, y, "darkgreen")
+        super.__init__(x, y, "darkgreen")
 
-    def aktualisieren(self):
+        # links, rechts, oben, unten
+        self.richtung: str
+        self.glieder = []
 
+    def aktualisieren(self, richtung):
+        neues_schlangenglied = SchlangenGlied(self)
+        self.glieder.append(neues_schlangenglied)
+
+        if richtung:
+            self.richtung = richtung
+
+        match self.richtung:
+            case "l":
+                self.x -= 1
+            case "r":
+                self.x += 1
+            case "o":
+                self.y += 1
+            case "u":
+                self.y -= 1
 
 
 class SchlangenGlied(SpielObjekt):
     def __init__(self, schlangenkopf):
-        super().__init__(schlangenkopf.spielfenster, schlangenkopf.x, schlangenkopf.y, "darkgreen")
-
-
+        super().__init__(schlangenkopf.x, schlangenkopf.y, "darkgreen")
 
 
 class Spiel:
@@ -99,15 +114,23 @@ class Spiel:
         self.spielfenster = spielfenster
 
         self.spielobjekte = []
-        self.schlangenkopf = SpielObjekt(spielfenster.w // 2, spielfenster.h // 2, "darkgreen")
+        self.schlangenkopf = SpielObjekt(spielfenster, spielfenster.w // 2, spielfenster.h // 2, "darkgreen")
         self.spielobjekte.append(self.schlangenkopf)
+        self.spielobjekte.append(self.schlangenkopf.glieder)
+
+        while True:
+            self.aktualisieren()
 
     def aktualisieren(self):
+        if "q" in self.spielfenster.eingaben:
+            self.spielfenster.window_exit()
+
+        eingabe = self.spielfenster.eingaben[0]
         for spielobjekt in self.spielobjekte:
-            spielobjekt.aktualisieren()
+            spielobjekt.aktualisieren(eingabe)
+        self.spielfenster.eingaben.pop(0)
 
         self.spielfenster.update_idletasks()
-
 
 
 class SpielFenster:
@@ -158,15 +181,19 @@ class SpielFenster:
         eine_kachel.config(bg="red")  # ein label rot, um zu sehen, ob es funktioniert
 
         # EINGABEN
-        def key_press(event):
-            
+        eingaben = []
 
-        root.bind('<Key>', key_press)
+        def tastendruck(event):
+            taste = event.key
+            self.eingaben.append(taste)
+            print(taste)
+
+        root.bind('<Key>', tastendruck)
 
     def kachel(self, row: int, column: int):
         return self.spielfeld.grid_slaves(row, column)[0]  # Es gibt nur ein Objekt in der Zelle, und das ist der Frame.
 
-    def _window_exit(self):
+    def window_exit(self):
         close = messagebox.askyesno("Beenden?", "Wollen Sie das Spiel wirklich beenden?")
 
         if close:
