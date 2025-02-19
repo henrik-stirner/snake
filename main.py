@@ -12,7 +12,6 @@ from tkinter import messagebox
 # from tkinter.ttk import *  # FÜR STYLES!!!
 
 from random import randint
-from time import sleep
 
 from utils import *
 
@@ -113,7 +112,7 @@ class Apfel(SpielObjekt):
 
 class SchlangenGlied(SpielObjekt):
     def __init__(self, spiel, schlangenkopf, lebensdauer):
-        super().__init__(spiel, schlangenkopf.x, schlangenkopf.y, "lightgreen", lebensdauer=lebensdauer)
+        super().__init__(spiel, schlangenkopf.x, schlangenkopf.y, "green", lebensdauer=lebensdauer)
 
 
 class SchlangenKopf(SpielObjekt):
@@ -160,9 +159,14 @@ class Spiel:
         self.spielobjekte += [self.schlange, self.apfel]
 
     def aktualisieren(self):
+        for spielobjekt in self.spielobjekte:
+            if spielobjekt.tot:
+                self.spielobjekte.remove(spielobjekt)
+
         if self.spiel_fenster.eingaben:
             if "\x1b" in self.spiel_fenster.eingaben:  # Escape
-                self.spiel_fenster.window_exit()
+                self.spiel_fenster.beenden()
+                return
 
             eingabe = self.spiel_fenster.eingaben.pop(0)
             match eingabe:
@@ -178,10 +182,6 @@ class Spiel:
         for spielobjekt in self.spielobjekte:
             spielobjekt.aktualisieren()
             spielobjekt.malen()
-
-        for spielobjekt in self.spielobjekte:
-            if spielobjekt.tot:
-                self.spielobjekte.remove(spielobjekt)
 
     def zufaelliges_feld(self):
         x = randint(0, self.spiel_fenster.w-1)
@@ -205,14 +205,15 @@ class Spiel:
         return x, y
 
 
-class SpielFenster(Tk):
+class SpielFenster(Toplevel):
     w, h = int(config["Game"]["w"]), int(config["Game"]["h"])
     delay = float(config["Game"]["delay"])
     erlaubte_tasten = "wasd"
     eingaben = []
 
     def __init__(self, launcher_fenster) -> None:
-        super().__init__()
+        super().__init__(launcher_fenster)
+
         self.focus_force()
 
         self.launcher_fenster = launcher_fenster
@@ -225,7 +226,7 @@ class SpielFenster(Tk):
         self.geometry(
             f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
         )
-        self.protocol("WM_DELETE_WINDOW", self.window_exit)
+        self.protocol("WM_DELETE_WINDOW", self.beenden)
 
         self.spielfeld = Frame(self)
         self.spielfeld.grid_columnconfigure(tuple(range(self.w)), weight=1)  # expand
@@ -251,12 +252,14 @@ class SpielFenster(Tk):
             color = int_to_hex_str(rgb)
             obj.config(bg=color)  # reset background when mouse leaves
 
+        self.kacheln = [[None for _ in range(self.h)] for _ in range(self.w)]
         for x in range(self.w):
             for y in range(self.h):
                 kachel = Label(self.spielfeld, bg="black", width=1, height=1)
                 kachel.grid(column=x, row=y, sticky="NESW")
                 kachel.bind("<Enter>", lambda event, obj=kachel: on_enter(obj, event))
                 kachel.bind("<Leave>", lambda event, obj=kachel: on_leave(obj, event))
+                self.kacheln[x][y] = kachel
 
         # Eingaben verarbeiten
         def bei_tastendruck(event):
@@ -269,41 +272,58 @@ class SpielFenster(Tk):
 
         # modifizierte Hauptschleife, die auch Spiellogik ausfuehrt
         self.running = True
+        self.hauptschleife_id = None
 
-        while self.running:
-            self.hauptschleife()
+        self.hauptschleife()
 
     def _kachel(self, column: int, row: int):
-        return self.spielfeld.grid_slaves(column=column, row=row)[0]  # Es gibt nur ein Objekt in der Zelle, und das ist der Frame.
-
-    def kachel_faerben(self, x, y, farbe):
-        kachel = self._kachel(x, y)
-        kachel.config(bg=farbe)
-
-    def window_exit(self):
-        close = messagebox.askyesno("Beenden?", "Wollen Sie das Spiel wirklich beenden?")
-
-        if close:
-            self.running = False
-            self.destroy()
-            self.launcher_fenster.deiconify()  # launcher_fenster wieder anzeigen
-
-    def hauptschleife(self):
         try:
-            self.spiel.aktualisieren()
+            # Es gibt nur ein Objekt in der Zelle, und das ist der Frame.
+            return self.spielfeld.grid_slaves(column=column, row=row)[0]
         except Exception as e:
             logger.error(e)
 
-        self.update_idletasks()
-        self.update()
+    def kachel_faerben(self, x, y, farbe):
+        try:
+            kachel = self.kacheln[x][y]
+            if kachel and kachel.winfo_exists():
+                kachel.config(bg=farbe)
+            else:
+                logger.warning(f"Kachel ({x}, {y}) existiert nicht mehr.")
+        except Exception as e:
+            logger.error(e)
 
-        sleep(self.delay)
+    def beenden(self):
+        beenden = messagebox.askyesno("Beenden?", "Wollen Sie das Spiel wirklich beenden?")
+        if beenden:
+            self.running = False
+            # sicherstellen, dass attribute nicht nach dem Schließen noch referenziert werden
+            self.after_cancel(self.hauptschleife_id)
+            self.after(100, self.schliessen)
+
+    def schliessen(self):
+        if not self.running:
+            self.destroy()
+            self.launcher_fenster.deiconify()
+
+    def hauptschleife(self):
+        if self.running:
+            try:
+                self.spiel.aktualisieren()
+            except Exception as e:
+                logger.error(e)
+
+            # seperater thread, um mainloop nicht zu blockieren
+            self.hauptschleife_id = self.after(int(self.delay * 500), self.hauptschleife)
 
 
 class Launcher(Tk):
     def __init__(self) -> None:
         super().__init__()
+
         self.focus_force()
+
+        self.spiel_fenster = None
 
         self.title("Launcher")
         self.configure(background="black")
