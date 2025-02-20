@@ -1,12 +1,8 @@
 from typing import *
 from configparser import ConfigParser
-import logging
-from logging.config import fileConfig
+import logging.config
 from os import walk, remove
 from datetime import datetime
-
-
-from win.launcher import Launcher
 
 
 # ----------
@@ -48,16 +44,6 @@ report suppressed errors without raising exceptions:
 """
 
 
-logging.config.fileConfig(
-            './logger.ini',
-            encoding='utf-8',
-            defaults={
-                'logfilename':
-                    f'./log/{datetime.now().strftime("%Y-%m-%d_-_%H-%M-%S")}.log'
-            }
-        )
-logger = logging.getLogger(__name__)
-
 # only keep up to 5 log files
 logfiles = list(filter(
     lambda file: file.endswith('.log') or file.split('.')[-1].isdigit(),
@@ -69,8 +55,27 @@ if len(logfiles) > 5:
 del logfiles
 
 
+logging.config.fileConfig(
+            './logger.ini',
+            encoding='utf-8',
+            defaults={
+                'logfilename':
+                    f'./log/{datetime.now().strftime("%Y-%m-%d_-_%H-%M-%S")}.log'
+            }
+        )
+logger = logging.getLogger(__name__)
+
+
 # ----------
-# game
+# eigene imports
+# ----------
+
+
+from win.launcher import Launcher
+
+
+# ----------
+# main
 # ----------
 
 

@@ -4,20 +4,22 @@ import logging
 
 from random import randint
 
-from gme.obj.schlange import SchlangenKopf, SchlangenGlied
-from gme.obj.apfel import Apfel
-
 
 # ----------
 # config und logger
 # ----------
-
 
 config = ConfigParser()
 config.read("./config.ini")
 
 logger = logging.getLogger(__name__)
 
+# ----------
+# eigene imports
+# ----------
+
+from gme.obj.schlange import SchlangenKopf, SchlangenGlied
+from gme.obj.apfel import Apfel
 
 # ----------
 

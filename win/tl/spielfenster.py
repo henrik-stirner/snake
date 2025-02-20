@@ -5,19 +5,21 @@ import logging
 from tkinter import *
 from tkinter import messagebox
 
-from utils import *
-from gme.klassisch import KlassischerModus
-
 # ----------
 # config und logger
 # ----------
-
 
 config = ConfigParser()
 config.read("./config.ini")
 
 logger = logging.getLogger(__name__)
 
+# ----------
+# eigene imports
+# ----------
+
+from utils import *
+from gme.klassisch import KlassischerModus
 
 # ----------
 

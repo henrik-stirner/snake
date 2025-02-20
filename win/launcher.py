@@ -4,19 +4,21 @@ import logging
 
 from tkinter import *
 
-from win.tl.spielfenster import SpielFenster
-
 
 # ----------
 # config und logger
 # ----------
-
 
 config = ConfigParser()
 config.read("./config.ini")
 
 logger = logging.getLogger(__name__)
 
+# ----------
+# eigene imports
+# ----------
+
+from win.tl.spielfenster import SpielFenster
 
 # ----------
 

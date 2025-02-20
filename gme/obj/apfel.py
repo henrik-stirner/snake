@@ -3,19 +3,20 @@ from configparser import ConfigParser
 import logging
 
 
-from gme.obj.base import SpielObjekt
-
-
 # ----------
 # config und logger
 # ----------
-
 
 config = ConfigParser()
 config.read("./config.ini")
 
 logger = logging.getLogger(__name__)
 
+# ----------
+# eigene imports
+# ----------
+
+from gme.obj.base import SpielObjekt
 
 # ----------
 
