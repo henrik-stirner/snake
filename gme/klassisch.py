@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from gme.obj.schlange import SchlangenKopf, SchlangenGlied
-from gme.obj.apfel import Apfel
+from gme.obj.konsumgut import Apfel
 
 # ----------
 
@@ -72,6 +72,15 @@ class KlassischesSpiel:
                 return False
 
         return True
+
+    def objekte_auf_feld(self, x, y):
+        objekte_auf_feld = []
+
+        for spielobjekt in self.spielobjekte:
+            if x == spielobjekt.x and y == spielobjekt.y:
+                objekte_auf_feld.append(spielobjekt)
+
+        return objekte_auf_feld
 
     def zufaelliges_freies_feld(self):
         x, y = self.zufaelliges_feld()

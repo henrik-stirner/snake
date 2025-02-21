@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from gme.obj.base import SpielObjekt
+from gme.obj.konsumgut import Konsumgut
 
 # ----------
 
@@ -37,10 +38,19 @@ class SchlangenKopf(SpielObjekt):
     def aktualisieren(self):
         super().aktualisieren()
 
+        # Konsum
+        if spielobjekte := self.spiel.objekte_auf_feld(self.x, self.y):
+            for spielobjekt in spielobjekte:
+                if isinstance(spielobjekt, Konsumgut):
+                    self.laenge += spielobjekt.wertigkeit
+                    spielobjekt.konsumiert = True
+
+        # Bombe
         if self.laenge:
             neues_schlangenglied = SchlangenGlied(self.spiel, self, self.laenge)
             self.spiel.spielobjekte.append(neues_schlangenglied)
 
+        # Bewegen: NACH BOMBE UND KONSUM
         match self.richtung:
             case "l":
                 if self.x > 0:
@@ -54,5 +64,3 @@ class SchlangenKopf(SpielObjekt):
             case "u":
                 if self.y < self.spiel.spiel_fenster.h-1:
                     self.y += 1
-
-        # TODO: Kollisionen -> Apfel "essen"
