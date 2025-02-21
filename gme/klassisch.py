@@ -24,7 +24,7 @@ from gme.obj.apfel import Apfel
 # ----------
 
 
-class KlassischerModus:
+class KlassischesSpiel:
     spielobjekte = []
 
     def __init__(self, spiel_fenster):

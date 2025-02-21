@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from utils import *
-from gme.klassisch import KlassischerModus
+from gme.klassisch import KlassischesSpiel
 
 # ----------
 
@@ -37,7 +37,7 @@ class SpielFenster(Toplevel):
 
         self.launcher_fenster = launcher_fenster
 
-        self.spiel = KlassischerModus(self)
+        self.spiel = KlassischesSpiel(self)
 
         self.title("gme")
         self.configure(background="black")
