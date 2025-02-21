@@ -31,7 +31,7 @@ class Launcher(Tk):
 
         self.spiel_fenster = None
 
-        self.title("Launcher")
+        self.title("Snake: Launcher")
         self.configure(background="black")
         # root.minsize(config["Window"]["w"], config["Window"]["h"])
         self.geometry(
@@ -76,7 +76,7 @@ class Launcher(Tk):
         # Startknopf
 
         self.start_knopf = Button(self, command=self._on_start,
-                                  text="START", font=config["Font"]["huge"], height=5,
+                                  text="zum START beliebige Taste drücken", font=config["Font"]["huge"], height=5,
                                   bg="black", fg="white", activeforeground="black", activebackground="white",
                                   highlightthickness=0, bd=0)
         self.start_knopf.pack(fill=X)
