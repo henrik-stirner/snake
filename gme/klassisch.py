@@ -31,7 +31,7 @@ class KlassischesSpiel:
         self.spiel_fenster = spiel_fenster
 
         self.schlange = SchlangenKopf(self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
-        self.apfel = Apfel(self, *self.zufaelliges_freies_feld())
+        self.apfel = Apfel(self, *self.zufaellige_freie_kachel())
 
         self.spielobjekte += [self.schlange, self.apfel]
 
@@ -64,33 +64,33 @@ class KlassischesSpiel:
             case "d":
                 self.schlange.richtung = "r"
 
-    def zufaelliges_feld(self):
+    def zufaellige_kachel(self):
         x = randint(0, self.spiel_fenster.w-1)
         y = randint(0, self.spiel_fenster.h-1)
 
         return x, y
 
-    def feld_frei(self, x, y):
+    def kachel_frei(self, x, y):
         for spielobjekt in self.spielobjekte:
             if x == spielobjekt.x and y == spielobjekt.y:
                 return False
 
         return True
 
-    def objekte_auf_feld(self, x, y):
-        objekte_auf_feld = []
+    def objekte_auf_kachel(self, x, y):
+        objekte = []
 
         for spielobjekt in self.spielobjekte:
             if x == spielobjekt.x and y == spielobjekt.y:
-                objekte_auf_feld.append(spielobjekt)
+                objekte.append(spielobjekt)
 
-        return objekte_auf_feld
+        return objekte
 
-    def zufaelliges_freies_feld(self):
-        x, y = self.zufaelliges_feld()
+    def zufaellige_freie_kachel(self):
+        x, y = self.zufaellige_kachel()
         # TODO: Was, wenn kein Feld mehr frei ist?
-        while not self.feld_frei(x, y):
-            x, y = self.zufaelliges_feld()
+        while not self.kachel_frei(x, y):
+            x, y = self.zufaellige_kachel()
 
         return x, y
 

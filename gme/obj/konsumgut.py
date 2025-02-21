@@ -41,7 +41,7 @@ class Apfel(Konsumgut):
 
     def aktualisieren(self):
         if self.konsumiert:
-            self.x, self.y = self.spiel.zufaelliges_freies_feld()
+            self.x, self.y = self.spiel.zufaellige_freie_kachel()
             self.konsumiert = False
         
         super().aktualisieren()

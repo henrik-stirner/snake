@@ -47,7 +47,7 @@ class SchlangenKopf(SpielObjekt):
         # AUSGANGSFELD
 
         # Konsum
-        if spielobjekte := self.spiel.objekte_auf_feld(self.x, self.y):
+        if spielobjekte := self.spiel.objekte_auf_kachel(self.x, self.y):
             for spielobjekt in spielobjekte:
                 if isinstance(spielobjekt, Konsumgut):
                     self.laenge += spielobjekt.wertigkeit
@@ -74,7 +74,7 @@ class SchlangenKopf(SpielObjekt):
         if not (0 <= self.x <= self.spiel.spiel_fenster.w-1) or not (0 <= self.y <= self.spiel.spiel_fenster.h-1):
             # gegen Wand gefahren
             self.tot = True
-        elif any(isinstance(obj, SchlangenGlied) for obj in self.spiel.objekte_auf_feld(self.x, self.y)):
+        elif any(isinstance(obj, SchlangenGlied) for obj in self.spiel.objekte_auf_kachel(self.x, self.y)):
             # in sich selbst gefahren
             self.tot = True
 
