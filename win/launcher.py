@@ -75,8 +75,11 @@ class Launcher(Tk):
 
         # Startknopf
 
+        self.start_label = Label(self, text="beliebige Taste drücken, um zu", font=config["Font"]["text"],
+                                 bg="black", fg="white")
+        self.start_label.pack(fill=X)
         self.start_knopf = Button(self, command=self._on_start,
-                                  text="zum START beliebige Taste drücken", font=config["Font"]["huge"], height=5,
+                                  text="STARTEN", font=config["Font"]["huge"], height=5,
                                   bg="black", fg="white", activeforeground="black", activebackground="white",
                                   highlightthickness=0, bd=0)
         self.start_knopf.pack(fill=X)
@@ -96,6 +99,10 @@ class Launcher(Tk):
                 score_label.pack(expand=True, fill=BOTH)
 
     def _on_start(self):
+        self.start_knopf.config(state="active")
+        self.after(int(float(config["Game"]["delay"]) * 500), self.spiel_starten)
+
+    def spiel_starten(self):
         self.withdraw()  # launcher_fenster verstecken
         SpielFenster(self)
 

@@ -26,7 +26,6 @@ from gme.klassisch import KlassischesSpiel
 
 class SpielFenster(Toplevel):
     w, h = int(config["Game"]["w"]), int(config["Game"]["h"])
-    delay = float(config["Game"]["delay"])
     erlaubte_tasten = "wasd"
     eingaben = []
 
@@ -127,7 +126,7 @@ class SpielFenster(Toplevel):
                 logger.error(e)
 
             # separater Thread, um mainloop nicht zu blockieren
-            self.hauptschleife_id = self.after(int(self.delay * 500), self.hauptschleife)
+            self.hauptschleife_id = self.after(int(float(config["Game"]["delay"]) * 500), self.hauptschleife)
 
     def schliessen(self):
         self.running = False
@@ -139,3 +138,4 @@ class SpielFenster(Toplevel):
         if not self.running:
             self.destroy()
             self.launcher_fenster.deiconify()
+            self.launcher_fenster.start_knopf.config(state="normal")
