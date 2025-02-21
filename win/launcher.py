@@ -40,6 +40,16 @@ class Launcher(Tk):
 
         self.interface_generieren()
 
+        self.protocol("WM_DELETE_WINDOW", self.schliessen)
+
+        def bei_tastendruck(event):
+            taste = event.char
+
+            if taste == "\x1b":  # Escape
+                self.schliessen()
+
+        self.bind('<Key>', bei_tastendruck)
+
         self.mainloop()
 
     def interface_generieren(self) -> None:
@@ -86,3 +96,6 @@ class Launcher(Tk):
     def _on_start(self):
         self.withdraw()  # launcher_fenster verstecken
         SpielFenster(self)
+
+    def schliessen(self):
+        self.destroy()

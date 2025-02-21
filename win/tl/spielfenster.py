@@ -45,8 +45,31 @@ class SpielFenster(Toplevel):
         self.geometry(
             f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
         )
+
+        self.kacheln = [[None for _ in range(self.h)] for _ in range(self.w)]
+        self.interface_generieren()
+
         self.protocol("WM_DELETE_WINDOW", self.schliessen)
 
+        def bei_tastendruck(event):
+            taste = event.char
+
+            if taste == "\x1b":  # Escape
+                self.spiel.spiel_beenden()
+
+            if taste in self.erlaubte_tasten:
+                self.eingaben.append(taste)
+                logger.info(self.eingaben)
+
+        self.bind('<Key>', bei_tastendruck)
+
+        # modifizierte Hauptschleife, die auch Spiellogik ausfuehrt
+        self.running = True
+        self.hauptschleife_id = None
+
+        self.hauptschleife()
+
+    def interface_generieren(self):
         self.spielfeld = Frame(self)
         self.spielfeld.grid_columnconfigure(tuple(range(self.w)), weight=1)  # expand
         self.spielfeld.grid_rowconfigure(tuple(range(self.h)), weight=1)
@@ -71,7 +94,6 @@ class SpielFenster(Toplevel):
             color = int_to_hex_str(rgb)
             obj.config(bg=color)  # reset background when mouse leaves
 
-        self.kacheln = [[None for _ in range(self.h)] for _ in range(self.w)]
         for x in range(self.w):
             for y in range(self.h):
                 kachel = Label(self.spielfeld, bg="black", width=1, height=1)
@@ -79,21 +101,6 @@ class SpielFenster(Toplevel):
                 kachel.bind("<Enter>", lambda event, obj=kachel: on_enter(obj, event))
                 kachel.bind("<Leave>", lambda event, obj=kachel: on_leave(obj, event))
                 self.kacheln[x][y] = kachel
-
-        # Eingaben verarbeiten
-        def bei_tastendruck(event):
-            taste = event.char
-            if taste in self.erlaubte_tasten:
-                self.eingaben.append(taste)
-                logger.info(self.eingaben)
-
-        self.bind('<Key>', bei_tastendruck)
-
-        # modifizierte Hauptschleife, die auch Spiellogik ausfuehrt
-        self.running = True
-        self.hauptschleife_id = None
-
-        self.hauptschleife()
 
     def _kachel(self, column: int, row: int):
         try:
@@ -112,6 +119,16 @@ class SpielFenster(Toplevel):
         except Exception as e:
             logger.error(f"self.kacheln : {e}")
 
+    def hauptschleife(self):
+        if self.running:
+            try:
+                self.spiel.aktualisieren()
+            except Exception as e:
+                logger.error(e)
+
+            # separater Thread, um mainloop nicht zu blockieren
+            self.hauptschleife_id = self.after(int(self.delay * 500), self.hauptschleife)
+
     def schliessen(self):
         self.running = False
         # sicherstellen, dass attribute nicht nach dem Schließen noch referenziert werden
@@ -122,13 +139,3 @@ class SpielFenster(Toplevel):
         if not self.running:
             self.destroy()
             self.launcher_fenster.deiconify()
-
-    def hauptschleife(self):
-        if self.running:
-            try:
-                self.spiel.aktualisieren()
-            except Exception as e:
-                logger.error(e)
-
-            # seperater thread, um mainloop nicht zu blockieren
-            self.hauptschleife_id = self.after(int(self.delay * 500), self.hauptschleife)

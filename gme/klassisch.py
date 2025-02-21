@@ -44,10 +44,6 @@ class KlassischesSpiel:
                 self.spielobjekte.remove(spielobjekt)
 
         if self.spiel_fenster.eingaben:
-            if "\x1b" in self.spiel_fenster.eingaben:  # Escape
-                self.spiel_beenden()
-                return
-
             eingabe = self.spiel_fenster.eingaben.pop(0)
             self.eingabe_verarbeiten(eingabe)
 
