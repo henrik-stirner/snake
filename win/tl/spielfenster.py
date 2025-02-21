@@ -110,7 +110,7 @@ class SpielFenster(Toplevel):
             else:
                 logger.warning(f"Kachel ({x}, {y}) existiert nicht mehr.")
         except Exception as e:
-            logger.error(e)
+            logger.error(f"self.kacheln : {e}")
 
     def schliessen(self):
         self.running = False

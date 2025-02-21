@@ -51,9 +51,10 @@ class KlassischesSpiel:
             eingabe = self.spiel_fenster.eingaben.pop(0)
             self.eingabe_verarbeiten(eingabe)
 
-        self.spielobjekte.sort(key=lambda obj: obj.z_index)
         for spielobjekt in self.spielobjekte:
             spielobjekt.aktualisieren()
+        self.spielobjekte.sort(key=lambda obj: obj.z_index)
+        for spielobjekt in self.spielobjekte:
             spielobjekt.malen()
 
     def eingabe_verarbeiten(self, eingabe):

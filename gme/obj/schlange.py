@@ -26,6 +26,14 @@ class SchlangenGlied(SpielObjekt):
     def __init__(self, spiel, schlangenkopf, lebensdauer):
         super().__init__(spiel, schlangenkopf.x, schlangenkopf.y, "green", 1, lebensdauer)
 
+        self.kopf = schlangenkopf
+
+    def aktualisieren(self):
+        if self.kopf.tot:
+            self.tot = True
+
+        super().aktualisieren()
+
 
 class SchlangenKopf(SpielObjekt):
     def __init__(self, spiel, x, y, richtung, laenge, lebensdauer=None):
@@ -69,11 +77,5 @@ class SchlangenKopf(SpielObjekt):
         elif any(isinstance(obj, SchlangenGlied) for obj in self.spiel.objekte_auf_feld(self.x, self.y)):
             # in sich selbst gefahren
             self.tot = True
-
-        if self.tot:
-            # es stirbt nicht nur der Kopf, sondern auch der Rest der Schlange
-            for obj in self.spiel.spielobjekte:
-                if isinstance(obj, SchlangenGlied):
-                    obj.tot = True
 
         super().aktualisieren()
