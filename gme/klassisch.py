@@ -56,6 +56,7 @@ class KlassischesSpiel:
                 case "d":
                     self.schlange.richtung = "r"
 
+        self.spielobjekte.sort(key=lambda obj: obj.z_index)
         for spielobjekt in self.spielobjekte:
             spielobjekt.aktualisieren()
             spielobjekt.malen()

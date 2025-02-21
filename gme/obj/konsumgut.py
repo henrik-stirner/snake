@@ -22,8 +22,8 @@ from gme.obj.base import SpielObjekt
 
 
 class Konsumgut(SpielObjekt):
-    def __init__(self, spiel, x, y, farbe, wertigkeit):
-        super().__init__(spiel, x, y, farbe)
+    def __init__(self, spiel, x, y, farbe, wertigkeit, lebensdauer=None):
+        super().__init__(spiel, x, y, farbe, 0, lebensdauer=lebensdauer)
 
         self.aktive_farbe = farbe
         self.konsumiert = False

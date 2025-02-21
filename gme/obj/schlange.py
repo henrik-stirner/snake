@@ -24,12 +24,12 @@ from gme.obj.konsumgut import Konsumgut
 
 class SchlangenGlied(SpielObjekt):
     def __init__(self, spiel, schlangenkopf, lebensdauer):
-        super().__init__(spiel, schlangenkopf.x, schlangenkopf.y, "green", lebensdauer=lebensdauer)
+        super().__init__(spiel, schlangenkopf.x, schlangenkopf.y, "green", 1, lebensdauer)
 
 
 class SchlangenKopf(SpielObjekt):
-    def __init__(self, spiel, x, y, richtung, laenge):
-        super().__init__(spiel, x, y, "darkgreen")
+    def __init__(self, spiel, x, y, richtung, laenge, lebensdauer=None):
+        super().__init__(spiel, x, y, "darkgreen", 2, lebensdauer)
 
         # links, rechts, oben, unten
         self.richtung = richtung

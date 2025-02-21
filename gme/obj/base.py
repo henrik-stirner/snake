@@ -22,13 +22,14 @@ logger = logging.getLogger(__name__)
 
 
 class SpielObjekt:
-    def __init__(self, spiel, x, y, farbe, lebensdauer=None):
+    def __init__(self, spiel, x, y, farbe, z_index=0, lebensdauer=None):
         self.spiel = spiel
 
         self.x = x
         self.y = y
 
         self.farbe = farbe
+        self.z_index = z_index
 
         self.tot = False
         self.lebensdauer: int | None = lebensdauer
