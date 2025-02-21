@@ -47,6 +47,8 @@ class Launcher(Tk):
 
             if taste == "\x1b":  # Escape
                 self.schliessen()
+            else:
+                self._on_start()
 
         self.bind('<Key>', bei_tastendruck)
 
