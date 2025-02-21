@@ -36,30 +36,36 @@ class KlassischesSpiel:
         self.spielobjekte += [self.schlange, self.apfel]
 
     def aktualisieren(self):
+        if self.schlange.tot:
+            self.spiel_beenden()
+
         for spielobjekt in self.spielobjekte:
             if spielobjekt.tot:
                 self.spielobjekte.remove(spielobjekt)
 
         if self.spiel_fenster.eingaben:
             if "\x1b" in self.spiel_fenster.eingaben:  # Escape
-                self.spiel_fenster.beenden()
+                self.spiel_beenden()
                 return
 
             eingabe = self.spiel_fenster.eingaben.pop(0)
-            match eingabe:
-                case "w":
-                    self.schlange.richtung = "o"
-                case "a":
-                    self.schlange.richtung = "l"
-                case "s":
-                    self.schlange.richtung = "u"
-                case "d":
-                    self.schlange.richtung = "r"
+            self.eingabe_verarbeiten(eingabe)
 
         self.spielobjekte.sort(key=lambda obj: obj.z_index)
         for spielobjekt in self.spielobjekte:
             spielobjekt.aktualisieren()
             spielobjekt.malen()
+
+    def eingabe_verarbeiten(self, eingabe):
+        match eingabe:
+            case "w":
+                self.schlange.richtung = "o"
+            case "a":
+                self.schlange.richtung = "l"
+            case "s":
+                self.schlange.richtung = "u"
+            case "d":
+                self.schlange.richtung = "r"
 
     def zufaelliges_feld(self):
         x = randint(0, self.spiel_fenster.w-1)
@@ -90,3 +96,6 @@ class KlassischesSpiel:
             x, y = self.zufaelliges_feld()
 
         return x, y
+
+    def spiel_beenden(self):
+        self.spiel_fenster.schliessen()

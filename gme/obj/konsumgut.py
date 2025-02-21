@@ -43,3 +43,5 @@ class Apfel(Konsumgut):
         if self.konsumiert:
             self.x, self.y = self.spiel.zufaelliges_freies_feld()
             self.konsumiert = False
+        
+        super().aktualisieren()

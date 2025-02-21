@@ -36,7 +36,7 @@ class SchlangenKopf(SpielObjekt):
         self.laenge = laenge
 
     def aktualisieren(self):
-        super().aktualisieren()
+        # AUSGANGSFELD
 
         # Konsum
         if spielobjekte := self.spiel.objekte_auf_feld(self.x, self.y):
@@ -53,14 +53,27 @@ class SchlangenKopf(SpielObjekt):
         # Bewegen: NACH BOMBE UND KONSUM
         match self.richtung:
             case "l":
-                if self.x > 0:
-                    self.x -= 1
+                self.x -= 1
             case "r":
-                if self.x < self.spiel.spiel_fenster.w-1:
-                    self.x += 1
+                self.x += 1
             case "o":
-                if self.y > 0:
-                    self.y -= 1
+                self.y -= 1
             case "u":
-                if self.y < self.spiel.spiel_fenster.h-1:
-                    self.y += 1
+                self.y += 1
+
+        # EIN FELD WEITER
+
+        if not (0 <= self.x <= self.spiel.spiel_fenster.w-1) or not (0 <= self.y <= self.spiel.spiel_fenster.h-1):
+            # gegen Wand gefahren
+            self.tot = True
+        elif any(isinstance(obj, SchlangenGlied) for obj in self.spiel.objekte_auf_feld(self.x, self.y)):
+            # in sich selbst gefahren
+            self.tot = True
+
+        if self.tot:
+            # es stirbt nicht nur der Kopf, sondern auch der Rest der Schlange
+            for obj in self.spiel.spielobjekte:
+                if isinstance(obj, SchlangenGlied):
+                    obj.tot = True
+
+        super().aktualisieren()

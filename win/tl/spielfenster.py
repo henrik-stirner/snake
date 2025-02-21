@@ -45,7 +45,7 @@ class SpielFenster(Toplevel):
         self.geometry(
             f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
         )
-        self.protocol("WM_DELETE_WINDOW", self.beenden)
+        self.protocol("WM_DELETE_WINDOW", self.schliessen)
 
         self.spielfeld = Frame(self)
         self.spielfeld.grid_columnconfigure(tuple(range(self.w)), weight=1)  # expand
@@ -112,15 +112,13 @@ class SpielFenster(Toplevel):
         except Exception as e:
             logger.error(e)
 
-    def beenden(self):
-        beenden = messagebox.askyesno("Beenden?", "Wollen Sie das gme wirklich beenden?")
-        if beenden:
-            self.running = False
-            # sicherstellen, dass attribute nicht nach dem Schließen noch referenziert werden
-            self.after_cancel(self.hauptschleife_id)
-            self.after(100, self.schliessen)
-
     def schliessen(self):
+        self.running = False
+        # sicherstellen, dass attribute nicht nach dem Schließen noch referenziert werden
+        self.after_cancel(self.hauptschleife_id)
+        self.after(100, self.tatsaechlich_schliessen)
+
+    def tatsaechlich_schliessen(self):
         if not self.running:
             self.destroy()
             self.launcher_fenster.deiconify()
