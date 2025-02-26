@@ -40,7 +40,7 @@ class SpielFenster(Toplevel):
 
         self.title("Snake: Klassisches Spiel")
         self.configure(background="black")
-        # root.minsize(config["Window"]["w"], config["Window"]["h"])
+        # self.minsize(config["Window"]["w"], config["Window"]["h"])
         self.geometry(
             f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
         )
