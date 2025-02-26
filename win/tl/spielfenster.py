@@ -19,14 +19,15 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from utils import *
+from win.tl.auswertungfenster import AuswertungFenster
 from gme.klassisch import KlassischesSpiel
+from gme.mehrspieler import MehrspielerSpiel
 
 # ----------
 
 
 class SpielFenster(Toplevel):
     w, h = int(config["Game"]["w"]), int(config["Game"]["h"])
-    erlaubte_tasten = "wasd"
     eingaben = []
 
     def __init__(self, launcher_fenster) -> None:
@@ -36,7 +37,7 @@ class SpielFenster(Toplevel):
 
         self.launcher_fenster = launcher_fenster
 
-        self.spiel = KlassischesSpiel(self)
+        self.spiel = MehrspielerSpiel(self)
 
         self.title("Snake: Klassisches Spiel")
         self.configure(background="black")
@@ -56,7 +57,7 @@ class SpielFenster(Toplevel):
             if taste == "\x1b":  # Escape
                 self.spiel.spiel_beenden()
 
-            if taste in self.erlaubte_tasten:
+            if taste in self.spiel.erlaubte_eingaben:
                 self.eingaben.append(taste)
 
             logger.debug(f"{taste} {taste in self.erlaubte_tasten}")
@@ -127,7 +128,7 @@ class SpielFenster(Toplevel):
                 logger.error(e)
 
             # separater Thread, um mainloop nicht zu blockieren
-            self.hauptschleife_id = self.after(int(float(config["Game"]["delay"]) * 500), self.hauptschleife)
+            self.hauptschleife_id = self.after(int(float(self.spiel.delay) * 500), self.hauptschleife)
 
     def schliessen(self):
         self.running = False
@@ -138,5 +139,4 @@ class SpielFenster(Toplevel):
     def tatsaechlich_schliessen(self):
         if not self.running:
             self.destroy()
-            self.launcher_fenster.deiconify()
-            self.launcher_fenster.start_knopf.config(state="normal")
+            AuswertungFenster(self.launcher_fenster, self.spiel)

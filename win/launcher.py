@@ -103,7 +103,7 @@ class Launcher(Tk):
         self.after(int(float(config["Game"]["delay"]) * 500), self.spiel_starten)
 
     def spiel_starten(self):
-        self.withdraw()  # launcher_fenster verstecken
+        self.withdraw()  # LauncherFenster verstecken
         SpielFenster(self)
 
     def schliessen(self):

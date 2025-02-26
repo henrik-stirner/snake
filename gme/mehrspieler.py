@@ -24,18 +24,19 @@ from gme.obj.konsumgut import Apfel
 # ----------
 
 
-class KlassischesSpiel:
-    erlaubte_eingaben = "wasd"
+class MehrspielerSpiel:
+    erlaubte_eingaben = "wasdijkl"
     delay = config["Game"]["delay"]
     spielobjekte = []
 
     def __init__(self, spiel_fenster):
         self.spiel_fenster = spiel_fenster
 
-        self.schlange = SchlangenKopf(self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
+        self.schlange_wasd = SchlangenKopf(self, (self.spiel_fenster.w) // 4, (self.spiel_fenster.h) // 2, "o", 2)
+        self.schlange_ijkl = SchlangenKopf(self, (self.spiel_fenster.w) // 4 * 3, (self.spiel_fenster.h) // 2, "o", 2)
         self.apfel = Apfel(self, *self.zufaellige_freie_kachel())
 
-        self.spielobjekte += [self.schlange, self.apfel]
+        self.spielobjekte += [self.schlange_wasd, self.schlange_ijkl, self.apfel]
 
     def aktualisieren(self):
         for spielobjekt in self.spielobjekte:
@@ -58,13 +59,22 @@ class KlassischesSpiel:
     def eingabe_verarbeiten(self, eingabe):
         match eingabe:
             case "w":
-                self.schlange.richtung = "o"
+                self.schlange_wasd.richtung = "o"
             case "a":
-                self.schlange.richtung = "l"
+                self.schlange_wasd.richtung = "l"
             case "s":
-                self.schlange.richtung = "u"
+                self.schlange_wasd.richtung = "u"
             case "d":
-                self.schlange.richtung = "r"
+                self.schlange_wasd.richtung = "r"
+
+            case "i":
+                self.schlange_ijkl.richtung = "o"
+            case "j":
+                self.schlange_ijkl.richtung = "l"
+            case "k":
+                self.schlange_ijkl.richtung = "u"
+            case "l":
+                self.schlange_ijkl.richtung = "r"
 
     def zufaellige_kachel(self):
         x = randint(0, self.spiel_fenster.w-1)
