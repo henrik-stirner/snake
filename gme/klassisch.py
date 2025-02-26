@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 # eigene imports
 # ----------
 
-from gme.obj.schlange import SchlangenKopf, SchlangenGlied
+from gme.obj.schlange import SchlangenKopf
 from gme.obj.konsumgut import Apfel
 
 # ----------
