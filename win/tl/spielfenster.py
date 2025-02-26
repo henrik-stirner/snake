@@ -58,7 +58,8 @@ class SpielFenster(Toplevel):
 
             if taste in self.erlaubte_tasten:
                 self.eingaben.append(taste)
-                logger.info(self.eingaben)
+
+            logger.debug(f"{taste} {taste in self.erlaubte_tasten}")
 
         self.bind('<Key>', bei_tastendruck)
 
