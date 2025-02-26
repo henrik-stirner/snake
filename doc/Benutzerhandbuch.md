@@ -7,7 +7,7 @@ Um das Programm zu starten führen sie das Skript `main.py` mit ihrem Pythoninte
 Achten sie dabei darauf, dass die folgenden Bibliotheken auf ihrem Gerät Instaliert sind!
 - **tkinter <b*r>
 
-Anschliessend sollte sich  das lancheFenster öffnen 
+Anschliessend sollte sich  das Launchfnster öffnen 
 ## 2 Eine Spielrunde starten
 Um jetzt eine Spielrunde zu starte,n drücken sie  mit ihrem courser auf Start oder betätigen sie `Enter`<br>
 **!!! ACHTUNG nach drücken der Entertaste startet das Spiel sofort !!!**
@@ -23,8 +23,8 @@ Für andere Spielarten sind andere Steuerungen möglich.
 Um Punkte zu erzielen, navigieren sie die Schlange zum rot gekenzeichnetem Feld<br>
 Für jedes Ereichen des Feldes erhalten sie im klassischem Spiel jeweils einen Punkt. Versuchen sie so viele Punkte wie möglich zu erzielen, um einen Platz auf dem leaderbord zu erhalten.
 ## 5 Das Spiel Beenden
-Nach Ende einer Spielrunde öffnet sich das auswertungs Fenster. Drücken sie mit ihrem courser auf weiter oder betätigen sie `Enter` oder `esc` um wieder zum lanch Fenster zu gelangen.<br>
-Um das Spiel vorzeitig zu beenden und zum lanch Fenster zurück zu kehren drücken sie `esc`<br>
-
+Nach Ende einer Spielrunde öffnet sich das Auswertungsfenster. Drücken sie mit ihrem courser auf weiter oder betätigen sie `Enter` oder `esc` um wieder zum Launchfenster zu gelangen.<br>
+Um das Spiel vorzeitig zu beenden und zum Launchfenster zurück zu kehren drücken sie `esc`<br>
+Falls sie Spiel- oder Auswertungsfenster manuell schliessen öffnet sich erneut das Launchfenster zurück gebracht.
 ## 6 Beenden des Programmes
-Betätigen sie im lanch Fenster `esc` um das Programm zu beenden. Alternativ können sie auch das launch Fenster manuell schliessen.
+Betätigen sie im Launchfenster `esc` um das Programm zu beenden. Alternativ können sie auch das Launchfenster manuell schliessen.
