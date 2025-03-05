@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from utils import *
+from win.tl.pausefenster import PauseFenster
 from win.tl.auswertungfenster import AuswertungFenster
 from gme.klassisch import KlassischesSpiel
 from gme.mehrspieler import MehrspielerSpiel
@@ -30,14 +31,19 @@ class SpielFenster(Toplevel):
     w, h = int(config["Game"]["w"]), int(config["Game"]["h"])
     eingaben = []
 
-    def __init__(self, launcher_fenster) -> None:
+    def __init__(self, launcher_fenster, spielart) -> None:
         super().__init__(launcher_fenster)
 
         self.focus_force()
 
         self.launcher_fenster = launcher_fenster
 
-        self.spiel = MehrspielerSpiel(self)
+        self.spiel = None
+        match spielart:
+            case "Klassisch":
+                self.spiel = KlassischesSpiel(self)
+            case "Mehrspieler":
+                self.spiel = MehrspielerSpiel(self)
 
         self.title("Snake: Klassisches Spiel")
         self.configure(background="black")
@@ -55,12 +61,13 @@ class SpielFenster(Toplevel):
             taste = event.char
 
             if taste == "\x1b":  # Escape
-                self.spiel.spiel_beenden()
+                self.running = False
+                self.pausieren()
 
             if taste in self.spiel.erlaubte_eingaben:
                 self.eingaben.append(taste)
 
-            logger.debug(f"{taste} {taste in self.erlaubte_tasten}")
+            logger.debug(f"{taste} {taste in self.spiel.erlaubte_eingaben}")
 
         self.bind('<Key>', bei_tastendruck)
 
@@ -129,6 +136,9 @@ class SpielFenster(Toplevel):
 
             # separater Thread, um mainloop nicht zu blockieren
             self.hauptschleife_id = self.after(int(float(self.spiel.delay) * 500), self.hauptschleife)
+    
+    def pausieren(self):
+        PauseFenster(self)
 
     def schliessen(self):
         self.running = False

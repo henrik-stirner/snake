@@ -3,6 +3,7 @@ from configparser import ConfigParser
 import logging
 
 from tkinter import *
+from tkinter import ttk
 
 
 # ----------
@@ -20,6 +21,9 @@ logger = logging.getLogger(__name__)
 
 from win.tl.spielfenster import SpielFenster
 
+from gme.klassisch import KlassischesSpiel
+from gme.mehrspieler import MehrspielerSpiel
+
 # ----------
 
 
@@ -30,6 +34,7 @@ class Launcher(Tk):
         self.focus_force()
 
         self.spiel_fenster = None
+        self.spiel = None
 
         self.title("Snake: Launcher")
         self.configure(background="black")
@@ -47,10 +52,9 @@ class Launcher(Tk):
 
             if taste == "\x1b":  # Escape
                 self.schliessen()
-            else:
-                self._on_start()
 
         self.bind('<Key>', bei_tastendruck)
+        self.bind('<Return>', lambda args: self._on_start())
 
         self.mainloop()
 
@@ -75,7 +79,7 @@ class Launcher(Tk):
 
         # Startknopf
 
-        self.start_label = Label(self, text="beliebige Taste drücken, um zu", font=config["Font"]["text"],
+        self.start_label = Label(self, text="Zum starten Eingabetaste drücken.", font=config["Font"]["text"],
                                  bg="black", fg="white")
         self.start_label.pack(fill=X)
         self.start_knopf = Button(self, command=self._on_start,
@@ -83,6 +87,14 @@ class Launcher(Tk):
                                   bg="black", fg="white", activeforeground="black", activebackground="white",
                                   highlightthickness=0, bd=0)
         self.start_knopf.pack(fill=X)
+
+        # Modus-Dropdown
+        self.modus_dropdown = ttk.Combobox(self,
+            state="readonly",
+            values=["Klassisch", "Mehrspieler", "Gegen Computer"]
+        )
+        self.modus_dropdown.current(int(config["Game"]["mode"]))
+        self.modus_dropdown.pack()
 
         # Ranking
 
@@ -102,9 +114,14 @@ class Launcher(Tk):
         self.start_knopf.config(state="active")
         self.after(int(float(config["Game"]["delay"]) * 500), self.spiel_starten)
 
-    def spiel_starten(self):
+    def spiel_starten(self):         
         self.withdraw()  # LauncherFenster verstecken
-        SpielFenster(self)
+        SpielFenster(self, self.modus_dropdown.get())
 
     def schliessen(self):
+        # gewaehlten Modus speichern
+        config.set("Game", "mode", str(self.modus_dropdown.current()))
+        with open("config.ini", "w") as configfile:
+            config.write(configfile)
+
         self.destroy()

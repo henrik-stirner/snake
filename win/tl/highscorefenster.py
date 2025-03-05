@@ -23,15 +23,15 @@ logger = logging.getLogger(__name__)
 # ----------
 
 
-class PauseFenster(Toplevel):
-    def __init__(self, spiel_fenster) -> None:
-        super().__init__(spiel_fenster)
+class EinstellungFenster(Toplevel):
+    def __init__(self, launcher_fenster) -> None:
+        super().__init__(launcher_fenster)
 
         self.focus_force()
 
-        self.spiel_fenster = spiel_fenster
+        self.launcher_fenster = launcher_fenster
 
-        self.title("Snake: Pause")
+        self.title("Snake: Einstellungen")
         self.configure(background="black")
         # self.minsize(config["Window"]["w"], config["Window"]["h"])
         self.geometry(
@@ -46,25 +46,17 @@ class PauseFenster(Toplevel):
             taste = event.char
 
             if taste == "\x1b":  # Escape
-                self.beenden()
+                self.schliessen()
 
         self.bind('<Key>', bei_tastendruck)
-        self.bind('<Return>', lambda args: self.fortfahren())
 
         self.mainloop()
 
     def interface_generieren(self) -> None:
         pass
-    
-    def fortfahren(self): 
-        self.schliessen()
-        self.spiel_fenster.running = True
-        self.spiel_fenster.hauptschleife()
 
-    def beenden(self):
-        self.schliessen()
-        self.spiel_fenster.schliessen()
-    
+    def _daten_laden(self):
+        pass
+
     def schliessen(self):
         self.destroy()
-
