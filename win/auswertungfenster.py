@@ -51,6 +51,7 @@ class AuswertungFenster(Nebenfenster):
 
     def eingabe(self):
         self.schliessen()
+        self.hauptfenster.spiel_starten()
 
     def abbruch(self):
         self.schliessen()

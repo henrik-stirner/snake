@@ -31,9 +31,6 @@ class Launcher(Hauptfenster):
         super().__init__()
         self.title("Launcher")
 
-        self.spiel_fenster = None
-        self.spiel = None
-
         self.interface_generieren()
         self.mainloop()
 
@@ -48,7 +45,7 @@ class Launcher(Hauptfenster):
         schlange(self.snake_frame, "SNAKE")
 
         # Startknopf
-        self.start_knopf = Button(self.frame, style="Big.TButton", command=self._on_start, text="STARTEN")
+        self.start_knopf = Button(self.frame, style="Big.TButton", command=self.spiel_starten, text="STARTEN")
         self.start_knopf.pack(fill=X)
 
         # Modus-Dropdown
@@ -77,6 +74,6 @@ class Launcher(Hauptfenster):
         with open("config.ini", "w") as configfile:
             config.write(configfile)
 
-    def _on_start(self):
+    def spiel_starten(self):
         self.withdraw()  # Launcher verstecken
         SpielFenster(self, self.modus_dropdown.get())
