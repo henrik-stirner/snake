@@ -3,6 +3,7 @@ from configparser import ConfigParser
 import logging
 
 from tkinter import *
+from tkinter.ttk import *
 
 
 # ----------
@@ -18,54 +19,21 @@ logger = logging.getLogger(__name__)
 # eigene imports
 # ----------
 
-# ...
+from win.base import Nebenfenster
 
 # ----------
 
 
-class AuswertungFenster(Toplevel):
+class AuswertungFenster(Nebenfenster):
     def __init__(self, launcher_fenster, spiel) -> None:
         super().__init__(launcher_fenster)
-
-        self.focus_force()
-
-        self.launcher_fenster = launcher_fenster
+        self.title("Auswertung")
 
         self.spiel = spiel
-
-        self.title("Snake: Klassisches Spiel")
-        self.configure(background="black")
-        # self.minsize(config["Window"]["w"], config["Window"]["h"])
-        self.geometry(
-            f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
-        )
     
         self.interface_generieren()
-
-        self.protocol("WM_DELETE_WINDOW", self.schliessen)
-
-        def bei_tastendruck(event):
-            taste = event.char
-
-            if taste == "\x1b":  # Escape
-                self.schliessen()
-
-        self.bind('<Key>', bei_tastendruck)
-        self.bind('<Return>', lambda args: self._on_start())
-
         self.mainloop()
 
-    def interface_generieren(self) -> None:
-        pass
-        
-    def _score_speichern():
-        pass
-
-    def schliessen(self):
-        self._score_speichern
-        self.destroy()
-        self.launcher_fenster.deiconify()
-        self.launcher_fenster.start_knopf.config(state="normal")
 
 # Neuer Code muss eingefügt werden
 '''

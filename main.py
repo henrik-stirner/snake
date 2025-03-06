@@ -4,6 +4,8 @@ import logging.config
 from os import walk, remove
 from datetime import datetime
 
+from tkinter.ttk import *
+
 
 # ----------
 # config
@@ -79,7 +81,7 @@ from win.launcher import Launcher
 # ----------
 
 
-def main(): 
+def main():
     Launcher()
 
 

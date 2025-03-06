@@ -1,9 +1,8 @@
-from typing import *
 from configparser import ConfigParser
 import logging
 
 from tkinter import *
-from tkinter import messagebox
+from tkinter.ttk import *
 
 # ----------
 # config und logger
@@ -18,25 +17,24 @@ logger = logging.getLogger(__name__)
 # eigene imports
 # ----------
 
-from utils import *
-from win.tl.pausefenster import PauseFenster
-from win.tl.auswertungfenster import AuswertungFenster
+from win.base import Nebenfenster
+from win.pausefenster import PauseFenster
+from win.auswertungfenster import AuswertungFenster
 from gme.klassisch import KlassischesSpiel
 from gme.mehrspieler import MehrspielerSpiel
 
 # ----------
 
 
-class SpielFenster(Toplevel):
+class SpielFenster(Nebenfenster):
     w, h = int(config["Game"]["w"]), int(config["Game"]["h"])
     eingaben = []
 
     def __init__(self, launcher_fenster, spielart) -> None:
         super().__init__(launcher_fenster)
+        self.title(f"{spielart}")
 
-        self.focus_force()
-
-        self.launcher_fenster = launcher_fenster
+        self.kacheln = [[None for _ in range(self.h)] for _ in range(self.w)]
 
         self.spiel = None
         match spielart:
@@ -45,40 +43,30 @@ class SpielFenster(Toplevel):
             case "Mehrspieler":
                 self.spiel = MehrspielerSpiel(self)
 
-        self.title("Snake: Klassisches Spiel")
-        self.configure(background="black")
-        # self.minsize(config["Window"]["w"], config["Window"]["h"])
-        self.geometry(
-            f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
-        )
-
-        self.kacheln = [[None for _ in range(self.h)] for _ in range(self.w)]
-        self.interface_generieren()
-
-        self.protocol("WM_DELETE_WINDOW", self.schliessen)
-
-        def bei_tastendruck(event):
-            taste = event.char
-
-            if taste == "\x1b":  # Escape
-                self.running = False
-                self.pausieren()
-
-            if taste in self.spiel.erlaubte_eingaben:
-                self.eingaben.append(taste)
-
-            logger.debug(f"{taste} {taste in self.spiel.erlaubte_eingaben}")
-
-        self.bind('<Key>', bei_tastendruck)
-
         # modifizierte Hauptschleife, die auch Spiellogik ausfuehrt
         self.running = True
         self.hauptschleife_id = None
 
+        self.interface_generieren()
         self.hauptschleife()
 
+    def taste(self, event):
+        taste = event.char
+
+        if taste == "\x1b":  # Escape
+            self.running = False
+            self.pausieren()
+
+        if taste in self.spiel.erlaubte_eingaben:
+            self.eingaben.append(taste)
+
+        logger.debug(f"{taste} {taste in self.spiel.erlaubte_eingaben}")
+
     def interface_generieren(self):
-        self.spielfeld = Frame(self)
+        super().interface_generieren()
+
+        # Spielfeld
+        self.spielfeld = Frame(self.frame)
         self.spielfeld.grid_columnconfigure(tuple(range(self.w)), weight=1)  # expand
         self.spielfeld.grid_rowconfigure(tuple(range(self.h)), weight=1)
         self.spielfeld.pack(expand=True, fill=BOTH)
@@ -86,28 +74,10 @@ class SpielFenster(Toplevel):
         # Farbe der Labels beim Hovern veraender, sodass man das Raster besser erkennen kann (interaktiver)
         mod = 0x111111  # Unterschied zwischen den Farben
 
-        def on_enter(obj, event):
-            rgb = get_rgb_int(obj)
-            rgb += mod
-            if rgb > 0xFFFFFF:
-                rgb = 0xFFFFFF
-            color = int_to_hex_str(rgb)
-            obj.config(bg=color)  # change background on hover
-
-        def on_leave(obj, event):
-            rgb = get_rgb_int(obj)
-            rgb -= mod
-            if rgb < 0:
-                rgb = 0
-            color = int_to_hex_str(rgb)
-            obj.config(bg=color)  # reset background when mouse leaves
-
         for x in range(self.w):
             for y in range(self.h):
-                kachel = Label(self.spielfeld, bg="black", width=1, height=1)
+                kachel = Label(self.spielfeld)
                 kachel.grid(column=x, row=y, sticky="NESW")
-                kachel.bind("<Enter>", lambda event, obj=kachel: on_enter(obj, event))
-                kachel.bind("<Leave>", lambda event, obj=kachel: on_leave(obj, event))
                 self.kacheln[x][y] = kachel
 
     def _kachel(self, column: int, row: int):
@@ -121,7 +91,7 @@ class SpielFenster(Toplevel):
         try:
             kachel = self.kacheln[x][y]
             if kachel and kachel.winfo_exists():
-                kachel.config(bg=farbe)
+                kachel.config(background=farbe)
             else:
                 logger.warning(f"Kachel ({x}, {y}) existiert nicht mehr.")
         except Exception as e:
@@ -149,4 +119,4 @@ class SpielFenster(Toplevel):
     def tatsaechlich_schliessen(self):
         if not self.running:
             self.destroy()
-            AuswertungFenster(self.launcher_fenster, self.spiel)
+            AuswertungFenster(self.hauptfenster, self.spiel)

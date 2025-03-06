@@ -1,9 +1,8 @@
-from typing import *
 from configparser import ConfigParser
 import logging
 
 from tkinter import *
-from tkinter import ttk
+from tkinter.ttk import *
 
 
 # ----------
@@ -19,49 +18,28 @@ logger = logging.getLogger(__name__)
 # eigene imports
 # ----------
 
-from win.tl.spielfenster import SpielFenster
-
-from gme.klassisch import KlassischesSpiel
-from gme.mehrspieler import MehrspielerSpiel
+from win.base import Hauptfenster
+from win.spielfenster import SpielFenster
 
 # ----------
 
 
-class Launcher(Tk):
+class Launcher(Hauptfenster):
     def __init__(self) -> None:
         super().__init__()
-
-        self.focus_force()
+        self.title("Launcher")
 
         self.spiel_fenster = None
         self.spiel = None
 
-        self.title("Snake: Launcher")
-        self.configure(background="black")
-        # self.minsize(config["Window"]["w"], config["Window"]["h"])
-        self.geometry(
-            f"{config['Window']['w']}x{config['Window']['h']}+{config['Window']['x']}+{config['Window']['y']}"
-        )
-
         self.interface_generieren()
-
-        self.protocol("WM_DELETE_WINDOW", self.schliessen)
-
-        def bei_tastendruck(event):
-            taste = event.char
-
-            if taste == "\x1b":  # Escape
-                self.schliessen()
-
-        self.bind('<Key>', bei_tastendruck)
-        self.bind('<Return>', lambda args: self._on_start())
-
         self.mainloop()
 
     def interface_generieren(self) -> None:
-        # Schlange
+        super().interface_generieren()
 
-        self.schlange_frame = Frame(self)
+        # Schlange
+        self.schlange_frame = Frame(self.frame)
         self.schlange_frame.pack(expand=True)
 
         self.schlange = Frame(self.schlange_frame, width=500, height=100)
@@ -72,24 +50,18 @@ class Launcher(Tk):
 
         farbe = 0x2EbA18
         for buchstabe in "SNAKE":
-            buchstabe_label = Label(self.schlange, text=buchstabe, font=config["Font"]["text"],
-                                    fg="white", bg=f"#{hex(farbe).removeprefix('0x')}")
+            buchstabe_label = Label(self.schlange, text=buchstabe, background=f"#{hex(farbe).removeprefix('0x')}")
             buchstabe_label.pack(side=LEFT, expand=True, fill=BOTH)
             farbe += 16
 
         # Startknopf
-
-        self.start_label = Label(self, text="Zum starten Eingabetaste drücken.", font=config["Font"]["text"],
-                                 bg="black", fg="white")
+        self.start_label = Label(self.frame, text="Zum starten Eingabetaste drücken.")
         self.start_label.pack(fill=X)
-        self.start_knopf = Button(self, command=self._on_start,
-                                  text="STARTEN", font=config["Font"]["huge"], height=5,
-                                  bg="black", fg="white", activeforeground="black", activebackground="white",
-                                  highlightthickness=0, bd=0)
+        self.start_knopf = Button(self.frame, command=self._on_start, text="STARTEN")
         self.start_knopf.pack(fill=X)
 
         # Modus-Dropdown
-        self.modus_dropdown = ttk.Combobox(self,
+        self.modus_dropdown = Combobox(self.frame,
             state="readonly",
             values=["Klassisch", "Mehrspieler", "Gegen Computer"]
         )
@@ -98,7 +70,7 @@ class Launcher(Tk):
 
         # Ranking
 
-        self.ranking_frame = Frame(self, bg="black")
+        self.ranking_frame = Frame(self.frame)
         self.ranking_frame.pack(expand=True)
 
         with open("scores.txt", "r") as lesedatei:
@@ -106,22 +78,15 @@ class Launcher(Tk):
             highscores.sort(key=lambda x: x[0], reverse=True)
 
             for highscore in highscores[:5]:
-                score_label = Label(self.ranking_frame, text=highscore[1], font=config["Font"]["head"],
-                                    fg="white", bg="black")
+                score_label = Label(self.ranking_frame, text=highscore[1])
                 score_label.pack(expand=True, fill=BOTH)
 
-    def _on_start(self):
-        self.start_knopf.config(state="active")
-        self.after(int(float(config["Game"]["delay"]) * 500), self.spiel_starten)
-
-    def spiel_starten(self):         
-        self.withdraw()  # LauncherFenster verstecken
-        SpielFenster(self, self.modus_dropdown.get())
-
-    def schliessen(self):
+    def einstellungen_speichern(self):
         # gewaehlten Modus speichern
         config.set("Game", "mode", str(self.modus_dropdown.current()))
         with open("config.ini", "w") as configfile:
             config.write(configfile)
 
-        self.destroy()
+    def _on_start(self):
+        self.withdraw()  # Launcher verstecken
+        SpielFenster(self, self.modus_dropdown.get())
