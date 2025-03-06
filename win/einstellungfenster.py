@@ -25,11 +25,9 @@ from win.base import Nebenfenster
 
 
 class EinstellungFenster(Nebenfenster):
-    def __init__(self, launcher_fenster, spiel) -> None:
+    def __init__(self, launcher_fenster) -> None:
         super().__init__(launcher_fenster)
         self.title("Einstellungen")
-
-        self.spiel = spiel
     
         self.interface_generieren()
         self.mainloop()

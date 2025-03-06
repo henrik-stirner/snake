@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 
 from win.base import Nebenfenster
 
+from util import schlange
+
 # ----------
 
 
@@ -31,6 +33,16 @@ class PauseFenster(Nebenfenster):
     
         self.interface_generieren()
         self.mainloop()
+
+    def interface_generieren(self):
+        super().interface_generieren()
+
+        # Fortfahren-Knopf
+        self.fortfahren_knopf = Button(self.frame, style="Big.TButton", text="FORTFAHREN", command=self.eingabe)
+        self.fortfahren_knopf.pack(fill=X)
+        # Beenden-Knopf
+        self.beenden_knopf = Button(self.frame, style="Big.TButton", text="BEENDEN", command=self.abbruch)
+        self.beenden_knopf.pack(fill=X)
     
     def eingabe(self):
         self.schliessen()

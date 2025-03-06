@@ -34,36 +34,23 @@ class AuswertungFenster(Nebenfenster):
         self.interface_generieren()
         self.mainloop()
 
+    def interface_generieren(self):
+        super().interface_generieren()
 
-# Neuer Code muss eingefügt werden
-'''
-from tkinter import *
-score = 100
-BabaFenster = Tk()
-BabaFenster.geometry("1600x900")
-BabaFenster.title("AuswertungsFenster")
+        # Score-Label
+        self.score_label = Label(self.frame, style="Big.TLabel", text="Score soll hier angezeigt werden.")
+        self.score_label.pack()
 
-schlange_frame = Frame(BabaFenster)
-schlange_frame.pack(expand=True)
+        # Wiederholen-Knopf
+        self.wiederholen_knopf = Button(self.frame, style="Big.TButton", text="ERNEUT SPIELEN", command=self.eingabe)
+        self.wiederholen_knopf.pack(fill=X)
 
-schlange = Frame(schlange_frame, width=500, height=100)
-schlange.grid_columnconfigure(tuple(range(5)), weight=1)
-schlange.grid_rowconfigure(0, weight=1)
-schlange.pack_propagate(0)
-schlange.pack()
+        # Beenden-Knopf
+        self.beenden_knopf = Button(self.frame, style="Big.TButton", text="BEENDEN", command=self.abbruch)
+        self.beenden_knopf.pack(fill=X)
 
-farbe = 0x2EbA18
-for buchstabe in "SNAKE":
-    buchstabe_label = Label(schlange, text=buchstabe,
-                            fg="white", bg=f"#{hex(farbe).removeprefix('0x')}")
-    buchstabe_label.pack(side=LEFT, expand=True, fill=BOTH)
-    farbe += 16
+    def eingabe(self):
+        self.schliessen()
 
-ScoreLabel = Label(BabaFenster, text="Score: "+str(score),bg="green")
-ScoreLabel.pack(side="top", fill="both",padx="30",pady="40")
-ReTryButton = Button(BabaFenster,text="Retry",bg="red")
-ReTryButton.pack(side="bottom", fill="both",padx="30",pady="40")
-QuitButton = Button(BabaFenster,text="Quit?",bg="green")
-QuitButton.pack(side="bottom", fill="both",padx="30",pady="50")
-BabaFenster.mainloop()
-'''
+    def abbruch(self):
+        self.schliessen()

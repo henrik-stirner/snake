@@ -64,6 +64,7 @@ class SpielFenster(Nebenfenster):
 
     def interface_generieren(self):
         super().interface_generieren()
+        self.frame.pack(expand=True, fill=BOTH)  # soll sich auch in y-Richtung ausdehnen
 
         # Spielfeld
         self.spielfeld = Frame(self.frame)

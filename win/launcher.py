@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 from win.base import Hauptfenster
 from win.spielfenster import SpielFenster
 
+from util import schlange
+
 # ----------
 
 
@@ -37,31 +39,13 @@ class Launcher(Hauptfenster):
 
     def interface_generieren(self) -> None:
         super().interface_generieren()
+        self.frame.pack(expand=True, fill=BOTH)  # soll sich auch in y-Richtung ausdehnen
 
         # Schlange
-        self.schlange_frame = Frame(self.frame)
-        self.schlange_frame.pack(expand=True)
+        self.snake_frame = Frame(self.frame)
+        self.snake_frame.pack(expand=True)
 
-        self.schlange = Frame(self.schlange_frame, width=500, height=100)
-        self.schlange.grid_columnconfigure(tuple(range(5)), weight=1)
-        self.schlange.grid_rowconfigure(0, weight=1)
-        self.schlange.pack_propagate(0)
-        self.schlange.pack()
-
-        farbe = 0x2EbA18
-        for buchstabe in "SNAKE":
-            hex_code = f"#{hex(farbe).removeprefix('0x')}"
-
-            stil = Style()
-            stil.configure("Custom.TFrame", background=hex_code)
-
-            buchstabe_frame = Frame(self.schlange, style="Custom.TFrame")
-            buchstabe_frame.pack(side=LEFT, expand=True, fill=BOTH)
-
-            buchstabe_label = Label(buchstabe_frame, text=buchstabe, background=hex_code)
-            buchstabe_label.pack(expand=True)
-
-            farbe += 16
+        schlange(self.snake_frame, "SNAKE")
 
         # Startknopf
         self.start_knopf = Button(self.frame, style="Big.TButton", command=self._on_start, text="STARTEN")

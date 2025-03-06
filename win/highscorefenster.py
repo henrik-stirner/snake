@@ -24,7 +24,7 @@ from win.base import Nebenfenster
 # ----------
 
 
-class EinstellungFenster(Nebenfenster):
+class HighscoreFenster(Nebenfenster):
     def __init__(self, launcher_fenster) -> None:
         super().__init__(launcher_fenster)
         self.title("Highscores")

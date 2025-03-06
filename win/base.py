@@ -43,8 +43,11 @@ class Hauptfenster(Tk):
 		self.bind('<Return>', lambda args: self.eingabe())
 
 	def interface_generieren(self):
+		self.background = Frame(self)
+		self.background.place(x=0, y=0, relwidth=1.0, relheight=1.0)
+
 		self.frame = Frame(self)
-		self.frame.pack(expand=True, fill=BOTH)
+		self.frame.pack(expand=True, fill=X)
 
 	def taste(self, event):
 		taste = event.char
@@ -86,8 +89,11 @@ class Nebenfenster(Toplevel):
 		self.bind('<Return>', lambda args: self.eingabe())
 
 	def interface_generieren(self):
+		self.background = Frame(self)
+		self.background.place(x=0, y=0, relwidth=1.0, relheight=1.0)
+
 		self.frame = Frame(self)
-		self.frame.pack(expand=True, fill=BOTH)
+		self.frame.pack(expand=True, fill=X)
 
 	def taste(self, event):
 		taste = event.char

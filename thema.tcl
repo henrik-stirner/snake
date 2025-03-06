@@ -19,9 +19,11 @@ ttk::style theme create dunkel -parent clam -settings {
 
     # Label
     ttk::style configure TLabel -background black -foreground white -padding 5 -anchor center -justify center
+    # Schriftarten
+    ttk::style configure Big.TLabel -font [list $system_font $big bold]
 
     # Button
-    ttk::style configure TButton -background black -foreground white -anchor center -padding 20
+    ttk::style configure TButton -background black -foreground white -anchor center -padding 50
     ttk::style map TButton -background [list active white] -foreground [list active black]
     # Schriftarten
     ttk::style configure Big.TButton -font [list $system_font $big bold]
