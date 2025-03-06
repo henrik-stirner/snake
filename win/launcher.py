@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 import logging
 
-from tkinter import *
+from tkinter import X, Y, LEFT, RIGHT, TOP, BOTTOM, BOTH, CENTER
 from tkinter.ttk import *
 
 
@@ -50,14 +50,21 @@ class Launcher(Hauptfenster):
 
         farbe = 0x2EbA18
         for buchstabe in "SNAKE":
-            buchstabe_label = Label(self.schlange, text=buchstabe, background=f"#{hex(farbe).removeprefix('0x')}")
-            buchstabe_label.pack(side=LEFT, expand=True, fill=BOTH)
+            hex_code = f"#{hex(farbe).removeprefix('0x')}"
+
+            stil = Style()
+            stil.configure("Custom.TFrame", background=hex_code)
+
+            buchstabe_frame = Frame(self.schlange, style="Custom.TFrame")
+            buchstabe_frame.pack(side=LEFT, expand=True, fill=BOTH)
+
+            buchstabe_label = Label(buchstabe_frame, text=buchstabe, background=hex_code)
+            buchstabe_label.pack(expand=True)
+
             farbe += 16
 
         # Startknopf
-        self.start_label = Label(self.frame, text="Zum starten Eingabetaste drücken.")
-        self.start_label.pack(fill=X)
-        self.start_knopf = Button(self.frame, command=self._on_start, text="STARTEN")
+        self.start_knopf = Button(self.frame, style="Big.TButton", command=self._on_start, text="STARTEN")
         self.start_knopf.pack(fill=X)
 
         # Modus-Dropdown
@@ -66,10 +73,9 @@ class Launcher(Hauptfenster):
             values=["Klassisch", "Mehrspieler", "Gegen Computer"]
         )
         self.modus_dropdown.current(int(config["Game"]["mode"]))
-        self.modus_dropdown.pack()
+        self.modus_dropdown.pack(pady=10)
 
         # Ranking
-
         self.ranking_frame = Frame(self.frame)
         self.ranking_frame.pack(expand=True)
 
@@ -79,7 +85,7 @@ class Launcher(Hauptfenster):
 
             for highscore in highscores[:5]:
                 score_label = Label(self.ranking_frame, text=highscore[1])
-                score_label.pack(expand=True, fill=BOTH)
+                score_label.pack()
 
     def einstellungen_speichern(self):
         # gewaehlten Modus speichern
