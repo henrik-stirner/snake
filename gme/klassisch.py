@@ -25,10 +25,9 @@ from gme.obj.konsumgut import Apfel
 
 
 class KlassischesSpiel(Spiel):
-    erlaubte_eingaben = "wasd"
-
     def __init__(self, spiel_fenster):
         super().__init__(spiel_fenster)
+        self.erlaubte_eingaben += "wasd"
 
         self.schlange = SchlangenKopf("wasd", self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
         self.apfel = Apfel(self, *self.zufaellige_freie_kachel())

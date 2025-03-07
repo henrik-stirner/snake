@@ -25,10 +25,9 @@ from gme.obj.konsumgut import Apfel
 
 
 class MehrspielerSpiel(Spiel):
-    erlaubte_eingaben = "wasdijkl"
-
     def __init__(self, spiel_fenster):
         super().__init__(spiel_fenster)
+        self.erlaubte_eingaben += "wasdijkl"
 
         self.schlange_wasd = SchlangenKopf("wasd", self, (self.spiel_fenster.w) // 4, (self.spiel_fenster.h) // 2, "o", 2)
         self.schlange_ijkl = SchlangenKopf("ijkl", self, (self.spiel_fenster.w) // 4 * 3, (self.spiel_fenster.h) // 2, "o", 2)

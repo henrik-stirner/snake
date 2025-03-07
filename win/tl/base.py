@@ -36,7 +36,7 @@ class Nebenfenster(Toplevel):
 
 		self.focus_force()
 		self.geometry(
-			f"{config["Window"]["w"]}x{config["Window"]["h"]}+{config["Window"]["x"]}+{config["Window"]["y"]}"
+			f"{config["Fenster"]["w"]}x{config["Fenster"]["h"]}+{config["Fenster"]["x"]}+{config["Fenster"]["y"]}"
 		)
 
 		self.protocol("WM_DELETE_WINDOW", self.schliessen)

@@ -27,7 +27,7 @@ from gme.mehrspieler import MehrspielerSpiel
 
 
 class SpielFenster(Nebenfenster):
-    w, h = int(config["Game"]["w"]), int(config["Game"]["h"])
+    w, h = int(config["Spiel"]["w"]), int(config["Spiel"]["h"])
     eingaben = []
 
     def __init__(self, launcher_fenster, spielart) -> None:

@@ -64,7 +64,7 @@ class Launcher(Hauptfenster):
             state="readonly",
             values=["Klassisch", "Mehrspieler", "Gegen Computer"]
         )
-        self.modus_dropdown.current(int(config["Game"]["mode"]))
+        self.modus_dropdown.current(int(config["Spiel"]["mode"]))
         self.modus_dropdown.pack(pady=10)
 
         # Ranking
@@ -88,6 +88,6 @@ class Launcher(Hauptfenster):
 
     def einstellungen_speichern(self):
         # gewaehlten Modus speichern
-        config.set("Game", "mode", str(self.modus_dropdown.current()))
+        config.set("Spiel", "mode", str(self.modus_dropdown.current()))
         with open("config.ini", "w") as configfile:
             config.write(configfile)

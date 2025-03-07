@@ -75,7 +75,7 @@ class AuswertungFenster(Nebenfenster):
         for obj in schlangen:
             spieler_label = Label(self.spieler_frame, foreground=farbe(obj), text=obj.name)
             spieler_label.pack(expand=True, fill=X)
-            score_label = Label(self.score_frame, text=str(obj.laenge))
+            score_label = Label(self.score_frame, foreground=farbe(obj), text=str(obj.laenge))
             score_label.pack(expand=True, fill=X)
 
         # Wiederholen-Knopf

@@ -25,7 +25,7 @@ from gme.obj.schlange import SchlangenKopf
 
 class Spiel:
     erlaubte_eingaben = ""
-    delay = config["Game"]["delay"]
+    delay = config["Spiel"]["delay"]
     spielobjekte = []
 
     def __init__(self, spiel_fenster):
