@@ -30,7 +30,7 @@ class KlassischesSpiel(Spiel):
     def __init__(self, spiel_fenster):
         super().__init__(spiel_fenster)
 
-        self.schlange = SchlangenKopf(self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
+        self.schlange = SchlangenKopf("wasd", self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
         self.apfel = Apfel(self, *self.zufaellige_freie_kachel())
 
         self.spielobjekte += [self.schlange, self.apfel]

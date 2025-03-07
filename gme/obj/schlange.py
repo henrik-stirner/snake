@@ -36,8 +36,10 @@ class SchlangenGlied(SpielObjekt):
 
 
 class SchlangenKopf(SpielObjekt):
-    def __init__(self, spiel, x, y, richtung, laenge, lebensdauer=None):
+    def __init__(self, name, spiel, x, y, richtung, laenge, lebensdauer=None):
         super().__init__(spiel, x, y, "darkgreen", 2, lebensdauer)
+
+        self.name = name
 
         # links, rechts, oben, unten
         self.richtung = richtung

@@ -33,7 +33,7 @@ class Spiel:
 
     def aktualisieren(self):
         for spielobjekt in self.spielobjekte:
-            if spielobjekt.tot:
+            if spielobjekt.tot and not isinstance(spielobjekt, SchlangenKopf):
                 self.spielobjekte.remove(spielobjekt)
 
         if self.spiel_fenster.eingaben:

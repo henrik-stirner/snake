@@ -30,8 +30,8 @@ class MehrspielerSpiel(Spiel):
     def __init__(self, spiel_fenster):
         super().__init__(spiel_fenster)
 
-        self.schlange_wasd = SchlangenKopf(self, (self.spiel_fenster.w) // 4, (self.spiel_fenster.h) // 2, "o", 2)
-        self.schlange_ijkl = SchlangenKopf(self, (self.spiel_fenster.w) // 4 * 3, (self.spiel_fenster.h) // 2, "o", 2)
+        self.schlange_wasd = SchlangenKopf("wasd", self, (self.spiel_fenster.w) // 4, (self.spiel_fenster.h) // 2, "o", 2)
+        self.schlange_ijkl = SchlangenKopf("ijkl", self, (self.spiel_fenster.w) // 4 * 3, (self.spiel_fenster.h) // 2, "o", 2)
         self.apfel = Apfel(self, *self.zufaellige_freie_kachel())
 
         self.spielobjekte += [self.schlange_wasd, self.schlange_ijkl, self.apfel]
