@@ -79,12 +79,15 @@ class Launcher(Hauptfenster):
                 score_label = Label(self.ranking_frame, text=highscore[1])
                 score_label.pack()
 
+    def spiel_starten(self):
+        self.withdraw()  # Launcher verstecken
+        SpielFenster(self, self.modus_dropdown.get())
+
+    def eingabe(self):
+        self.spiel_starten()
+
     def einstellungen_speichern(self):
         # gewaehlten Modus speichern
         config.set("Game", "mode", str(self.modus_dropdown.current()))
         with open("config.ini", "w") as configfile:
             config.write(configfile)
-
-    def spiel_starten(self):
-        self.withdraw()  # Launcher verstecken
-        SpielFenster(self, self.modus_dropdown.get())

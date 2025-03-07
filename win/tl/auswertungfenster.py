@@ -62,7 +62,7 @@ class AuswertungFenster(Nebenfenster):
 
         farbe = lambda obj: "red" if obj.tot else "green" if obj.name == gewinner.name else "white"
         for obj in schlangen:
-            anzeigetext = f"{obj.laenge} | {obj.name}"
+            anzeigetext = f"Spieler: {obj.name}\t Score: {obj.laenge}"
 
             self.score_label = Label(self.score_frame, foreground=farbe(obj), text=anzeigetext)
             self.score_label.pack(expand=True, fill=X)
