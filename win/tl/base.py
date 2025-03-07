@@ -24,14 +24,15 @@ logger = logging.getLogger(__name__)
 # ----------
 
 
-class Hauptfenster(Tk):
-	def __init__(self) -> None:
-		super().__init__()
+class Nebenfenster(Toplevel):
+	def __init__(self, hauptfenster) -> None:
+		super().__init__(hauptfenster)
 
-		self.tk.call("source", "./thema.tcl")
+		self.hauptfenster = hauptfenster
 
-		self.stil = Style()
-		self.stil.theme_use("dunkel")
+		self.stil = self.hauptfenster.stil
+		stil_name = self.hauptfenster.stil.theme_use()
+		self.stil.theme_use(stil_name)
 
 		self.focus_force()
 		self.geometry(
@@ -67,3 +68,4 @@ class Hauptfenster(Tk):
 	def schliessen(self):
 		self.einstellungen_speichern()
 		self.destroy()
+		self.hauptfenster.deiconify()

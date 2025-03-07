@@ -1,10 +1,5 @@
-from typing import *
 from configparser import ConfigParser
 import logging
-
-from tkinter import X, Y, LEFT, RIGHT, TOP, BOTTOM, BOTH
-from tkinter.ttk import *
-
 
 # ----------
 # config und logger
@@ -19,7 +14,7 @@ logger = logging.getLogger(__name__)
 # eigene imports
 # ----------
 
-from win.base import Nebenfenster
+from win.tl.base import Nebenfenster
 
 # ----------
 

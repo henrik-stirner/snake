@@ -1,11 +1,7 @@
-from typing import *
 from configparser import ConfigParser
 import logging.config
 from os import walk, remove
 from datetime import datetime
-
-from tkinter.ttk import *
-
 
 # ----------
 # config

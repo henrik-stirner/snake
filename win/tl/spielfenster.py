@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 import logging
 
-from tkinter import X, Y, LEFT, RIGHT, TOP, BOTTOM, BOTH
+from tkinter import BOTH
 from tkinter.ttk import *
 
 # ----------
@@ -17,9 +17,9 @@ logger = logging.getLogger(__name__)
 # eigene imports
 # ----------
 
-from win.base import Nebenfenster
-from win.pausefenster import PauseFenster
-from win.auswertungfenster import AuswertungFenster
+from win.tl.base import Nebenfenster
+from win.tl.pausefenster import PauseFenster
+from win.tl.auswertungfenster import AuswertungFenster
 from gme.klassisch import KlassischesSpiel
 from gme.mehrspieler import MehrspielerSpiel
 
