@@ -23,7 +23,7 @@ from win.tl.base import Nebenfenster
 # ----------
 
 
-class HighscoreFenster(Nebenfenster):
+class ScoreFenster(Nebenfenster):
     def __init__(self, launcher_fenster) -> None:
         super().__init__(launcher_fenster)
         self.title("Highscores")
@@ -41,7 +41,6 @@ class HighscoreFenster(Nebenfenster):
 
         # Ranking
         self.ranking_frame = VerticalScrolledFrame(self.frame)
-        self.ranking_frame.interior.grid_columnconfigure(tuple(range(2)), weight=1)
         self.ranking_frame.pack(expand=True, fill=BOTH)
 
         self.spieler_frame = Frame(self.ranking_frame.interior)
@@ -51,13 +50,13 @@ class HighscoreFenster(Nebenfenster):
         self.score_frame.pack(side=RIGHT, expand=True, fill=BOTH)
 
         with open("scores.txt", "r") as lesedatei:
-            scores = [zeile for zeile in lesedatei.readlines()]
+            scores = [zeile for zeile in lesedatei.readlines() if (zeile.strip())]
             scores.sort(key=lambda x: int(x.split()[1]), reverse=True)
 
             for zeile in scores:
                 spieler, score = zeile.split()
 
-                spieler_label = Label(self.spieler_frame, text=spieler, anchor=E)
-                spieler_label.pack(fill=X)
-                score_label = Label(self.score_frame, text=score, anchor=W)
-                score_label.pack(fill=X)
+                spieler_label = Label(self.spieler_frame, text=spieler)
+                spieler_label.pack(anchor=E)
+                score_label = Label(self.score_frame, text=score)
+                score_label.pack(anchor=W)

@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from win.base import Hauptfenster
-from win.tl.highscorefenster import HighscoreFenster
+from win.tl.scorefenster import ScoreFenster
 from win.tl.einstellungfenster import EinstellungFenster
 from win.tl.spielfenster import SpielFenster
 
@@ -96,7 +96,7 @@ class Launcher(Hauptfenster):
         self.score_frame.grid(row=0, column=1, sticky="news")
 
         with open("scores.txt", "r") as lesedatei:
-            scores = [zeile for zeile in lesedatei.readlines()]
+            scores = [zeile for zeile in lesedatei.readlines() if (zeile.strip())]
             scores.sort(key=lambda x: int(x.split()[1]), reverse=True)
 
             for highscore in scores[:5]:
@@ -113,7 +113,7 @@ class Launcher(Hauptfenster):
 
     def scores_anzeigen(self):
         self.withdraw()
-        HighscoreFenster(self)
+        ScoreFenster(self)
 
     def einstellungen_anzeigen(self):
         self.withdraw()
