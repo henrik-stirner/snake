@@ -71,15 +71,26 @@ class Launcher(Hauptfenster):
 
         # Ranking
         self.ranking_frame = Frame(self.frame)
+        self.ranking_frame.grid_columnconfigure(tuple(range(2)), weight=1)
         self.ranking_frame.pack(expand=True)
 
-        with open("scores.txt", "r") as lesedatei:
-            highscores = [(int(zeile.split()[1]), zeile) for zeile in lesedatei.readlines()]
-            highscores.sort(key=lambda x: x[0], reverse=True)
+        self.spieler_frame = Frame(self.ranking_frame)
+        self.spieler_frame.grid(row=0, column=0, sticky="news")
 
-            for highscore in highscores[:5]:
-                score_label = Label(self.ranking_frame, text=highscore[1])
-                score_label.pack()
+        self.score_frame = Frame(self.ranking_frame)
+        self.score_frame.grid(row=0, column=1, sticky="news")
+
+        with open("scores.txt", "r") as lesedatei:
+            scores = [zeile for zeile in lesedatei.readlines()]
+            scores.sort(key=lambda x: int(x.split()[1]), reverse=True)
+
+            for highscore in scores[:5]:
+                spieler, score = highscore.split()
+
+                spieler_label = Label(self.spieler_frame, text=spieler)
+                spieler_label.pack(expand=True, fill=X)
+                score_label = Label(self.score_frame, text=score)
+                score_label.pack(expand=True, fill=X)
 
     def spiel_starten(self):
         self.withdraw()  # Launcher verstecken
