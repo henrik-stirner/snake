@@ -51,11 +51,11 @@ class NameEingabeFenster(Nebenfenster):
 				spieler_entry.insert(0, f"Spieler{str(i).zfill(num_len)}")
 		else:
 			# variable Spielerzahl
-			self.hinzufuegen_knopf = Button(self.knopf_frame, style="Big.TButton", text="Spieler Hinzufügen", command=self.entry_erstellen)
+			self.hinzufuegen_knopf = Button(self.knopf_frame, style="Big.TButton", text="SPIELER HINZUFÜGEN", command=self.entry_erstellen)
 			self.hinzufuegen_knopf.pack(fill=X)
 
 		# Fortfahren-Knopf
-		self.fertig_knopf = Button(self.knopf_frame, style="Big.TButton", text="Fortfahren", command=self.eingabe)
+		self.fertig_knopf = Button(self.knopf_frame, style="Big.TButton", text="FORTFAHREN", command=self.eingabe)
 		self.fertig_knopf.pack(fill=X)
 
 	def entry_erstellen(self):

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 33.866666 33.866666"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="icons.svg"
+   inkscape:export-filename="pokal.png"
+   inkscape:export-xdpi="48"
+   inkscape:export-ydpi="48"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="8.3882716"
+     inkscape:cx="71.230407"
+     inkscape:cy="61.335639"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="2552"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="pokal"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <path
+       id="path1"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="M 6.4520611,2.6148276 A 11.481308,11.481308 0 0 0 5.4521221,7.2827597 11.481308,11.481308 0 0 0 13.211339,18.118274 V 28.247372 H 8.5976665 v 3.004467 H 24.7326 V 28.247372 H 20.118928 V 18.312577 A 11.481308,11.481308 0 0 0 28.414545,7.2827597 11.481308,11.481308 0 0 0 27.419257,2.6148276 Z" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="zahnrad"
+     style="display:none">
+    <path
+       id="path2"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="m 14.132729,2.5158669 -0.01188,1.9740397 A 12.507664,12.507664 0 0 0 10.359316,6.1714577 L 8.8663837,4.6604388 4.7586241,8.7191058 6.4344908,10.415127 a 12.507664,12.507664 0 0 0 -1.3487549,3.559472 l -2.534729,-0.0155 -0.03514,5.774842 2.6980265,0.01654 a 12.507664,12.507664 0 0 0 1.4071493,3.312459 l -1.9606039,1.93735 4.058667,4.108276 1.9590542,-1.935799 a 12.507664,12.507664 0 0 0 3.297473,1.442289 l -0.01602,2.701127 5.774841,0.03462 0.01499,-2.519743 a 12.507664,12.507664 0 0 0 3.581693,-1.314132 l 1.669149,1.689303 4.108276,-4.058667 -1.498616,-1.51722 a 12.507664,12.507664 0 0 0 1.733227,-3.734656 l 1.973006,0.01188 0.03462,-5.774841 -1.79524,-0.01085 A 12.507664,12.507664 0 0 0 27.979946,10.077679 L 29.206228,8.8663837 25.147561,4.7581073 23.922829,5.9683693 A 12.507664,12.507664 0 0 0 19.896718,4.3379779 l 0.01085,-1.786971 z m 3.156913,7.5514771 a 6.5008554,6.5008554 0 0 1 6.500896,6.500895 6.5008554,6.5008554 0 0 1 -6.500896,6.500896 6.5008554,6.5008554 0 0 1 -6.500895,-6.500896 6.5008554,6.5008554 0 0 1 6.500895,-6.500895 z" />
+  </g>
+</svg>

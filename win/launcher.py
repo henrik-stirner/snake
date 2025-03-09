@@ -1,7 +1,8 @@
 from configparser import ConfigParser
 import logging
+from os.path import abspath
 
-from tkinter import X, BOTH
+from tkinter import PhotoImage, LEFT, RIGHT, X, Y, BOTH
 from tkinter.ttk import *
 
 
@@ -19,6 +20,8 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from win.base import Hauptfenster
+from win.tl.highscorefenster import HighscoreFenster
+from win.tl.einstellungfenster import EinstellungFenster
 from win.tl.spielfenster import SpielFenster
 
 # ----------
@@ -37,6 +40,18 @@ class Launcher(Hauptfenster):
     def interface_generieren(self) -> None:
         super().interface_generieren()
         self.frame.pack(expand=True, fill=BOTH)  # soll sich auch in y-Richtung ausdehnen
+
+        # Score- und Einstellungsknopf
+        self.menue_frame = Frame(self.frame)
+        self.menue_frame.pack(fill=X)
+
+        self.pokal_pi = PhotoImage(file=abspath("./ico/pokal.png"))
+        self.score_knopf = Button(self.menue_frame, style="Ico.TButton", image=self.pokal_pi, command=self.scores_anzeigen)
+        self.score_knopf.pack(side=LEFT)
+
+        self.zahnrad_pi = PhotoImage(file=abspath("./ico/zahnrad.png"))
+        self.einstellung_knopf = Button(self.menue_frame, style="Ico.TButton", image=self.zahnrad_pi, command=self.einstellungen_anzeigen)
+        self.einstellung_knopf.pack(side=RIGHT)
 
         # Schlange
         self.schlange_frame = Frame(self.frame)
@@ -96,6 +111,14 @@ class Launcher(Hauptfenster):
         self.withdraw()  # Launcher verstecken
         SpielFenster(self, self.modus_dropdown.get())
 
+    def scores_anzeigen(self):
+        self.withdraw()
+        HighscoreFenster(self)
+
+    def einstellungen_anzeigen(self):
+        self.withdraw()
+        EinstellungFenster(self)
+
     def eingabe(self):
         self.spiel_starten()
 
@@ -104,3 +127,7 @@ class Launcher(Hauptfenster):
         config.set("Spiel", "mode", str(self.modus_dropdown.current()))
         with open("config.ini", "w") as configfile:
             config.write(configfile)
+
+    def schliessen(self):
+        self.running = False
+        self.destroy()

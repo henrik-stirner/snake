@@ -19,14 +19,17 @@ ttk::style theme create dunkel -parent clam -settings {
 
     # Label
     ttk::style configure TLabel -background black -foreground white -padding 5 -anchor center -justify center
-    # Schriftarten
+    # weitere
     ttk::style configure Big.TLabel -font [list $system_font $big bold]
 
     # Button
     ttk::style configure TButton -background black -foreground white -anchor center -padding 50
     ttk::style map TButton -background [list active white] -foreground [list active black]
-    # Schriftarten
+    # ----------
     ttk::style configure Big.TButton -font [list $system_font $big bold]
+    # weitere
+    ttk::style configure Ico.TButton -padding 5
+    ttk::style map Ico.TButton -background [list active black]
 
     # Entry
     ttk::style configure TEntry -background black -foreground white -fieldbackground black -darkcolor white -lightcolor black -borderwidth 3 -relief flat -padding {10 5}
@@ -40,4 +43,7 @@ ttk::style theme create dunkel -parent clam -settings {
     option add *TCombobox*Listbox.selectForeground black
     # Frame der Liste
     # ttk::style configure ComboboxPopdownFrame -background black -borderwidth 0 -relief flat
+
+    # Scrollbar
+    ttk::style configure Vertical.TScrollbar -gripcount 0 -background black -troughcolor black -bordercolor black -arrowcolor white -arrowsize 17 -borderwidth 0 -relief flat -padding {10 5}
 }
