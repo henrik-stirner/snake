@@ -74,7 +74,7 @@ class Launcher(Hauptfenster):
         self.ranking_frame.pack(expand=True)
 
         with open("scores.txt", "r") as lesedatei:
-            highscores = [(int(zeile.split()[0]), zeile) for zeile in lesedatei.readlines()]
+            highscores = [(int(zeile.split()[1]), zeile) for zeile in lesedatei.readlines()]
             highscores.sort(key=lambda x: x[0], reverse=True)
 
             for highscore in highscores[:5]:

@@ -31,7 +31,8 @@ class AuswertungFenster(Nebenfenster):
         self.title("Auswertung")
 
         self.spiel = spiel
-    
+        self.schlangen = []
+
         self.interface_generieren()
         self.mainloop()
 
@@ -39,14 +40,13 @@ class AuswertungFenster(Nebenfenster):
         super().interface_generieren()
 
         # Datenermittlung (Auswertung)
-        schlangen = []
         gewinner = None
 
         for obj in self.spiel.spielobjekte:
             if not isinstance(obj, SchlangenKopf):
                 continue
 
-            schlangen.append(obj)
+            self.schlangen.append(obj)
 
             if not obj.tot:
                 if gewinner is None:
@@ -54,7 +54,7 @@ class AuswertungFenster(Nebenfenster):
                 elif obj.laenge > gewinner.laenge:
                     gewinner = obj
 
-        schlangen.sort(key=lambda obj: obj.laenge, reverse=True)
+        self.schlangen.sort(key=lambda obj: obj.laenge, reverse=True)
 
         # Anzeige
         self.anzeige_frame = Frame(self.frame)
@@ -72,7 +72,7 @@ class AuswertungFenster(Nebenfenster):
         self.score_info_label.pack(expand=True, fill=X, pady=10)
 
         farbe = lambda obj: "red" if obj.tot else "green" if obj.name == gewinner.name else "white"
-        for obj in schlangen:
+        for obj in self.schlangen:
             spieler_label = Label(self.spieler_frame, foreground=farbe(obj), text=obj.name)
             spieler_label.pack(expand=True, fill=X)
             score_label = Label(self.score_frame, foreground=farbe(obj), text=str(obj.laenge))
@@ -96,3 +96,12 @@ class AuswertungFenster(Nebenfenster):
         self.schliessen()
         self.hauptfenster.running = False
         self.hauptfenster.schliessen()
+
+    def score_speichern(self):
+        with open("scores.txt", "a") as f:
+            f.writelines([f"\n{obj.name}\t{obj.laenge}" for obj in self.schlangen])
+
+    def schliessen(self):
+        self.score_speichern()
+
+        super().schliessen()

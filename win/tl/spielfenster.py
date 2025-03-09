@@ -18,8 +18,10 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from win.tl.base import Nebenfenster
+from win.tl.nameeingabefenster import NameEingabeFenster
 from win.tl.pausefenster import PauseFenster
 from win.tl.auswertungfenster import AuswertungFenster
+
 from gme.klassisch import KlassischesSpiel
 from gme.mehrspieler import MehrspielerSpiel
 
@@ -36,18 +38,29 @@ class SpielFenster(Nebenfenster):
 
         self.kacheln = [[None for _ in range(self.h)] for _ in range(self.w)]
 
+        self.spielart = spielart
         self.spiel = None
-        match spielart:
-            case "Klassisch":
-                self.spiel = KlassischesSpiel(self)
-            case "Mehrspieler":
-                self.spiel = MehrspielerSpiel(self)
 
         # modifizierte Hauptschleife, die auch Spiellogik ausfuehrt
         self.running = True
         self.hauptschleife_id = None
 
         self.interface_generieren()
+
+        self.withdraw()
+        match spielart:
+            case "Klassisch":
+                NameEingabeFenster(self, 1)
+            case "Mehrspieler":
+                NameEingabeFenster(self, 2)
+
+    def spiel_starten(self, namen: list[str]):
+        match self.spielart:
+            case "Klassisch":
+                self.spiel = KlassischesSpiel(self, *namen)
+            case "Mehrspieler":
+                self.spiel = MehrspielerSpiel(self, *namen)
+
         self.hauptschleife()
 
     def taste(self, event):
@@ -56,6 +69,7 @@ class SpielFenster(Nebenfenster):
         if taste == "\x1b":  # Escape
             self.running = False
             self.pausieren()
+            return
 
         if taste in self.spiel.erlaubte_eingaben:
             self.eingaben.append(taste)
@@ -96,7 +110,7 @@ class SpielFenster(Nebenfenster):
             else:
                 logger.warning(f"Kachel ({x}, {y}) existiert nicht mehr.")
         except Exception as e:
-            logger.error(f"self.kacheln : {e}")
+            logger.exception(f"self.kacheln : {e}")
 
     def hauptschleife(self):
         if self.running:
@@ -113,16 +127,15 @@ class SpielFenster(Nebenfenster):
 
     def schliessen(self):
         self.running = False
-        # sicherstellen, dass attribute nicht nach dem Schließen noch referenziert werden
-        self.after_cancel(self.hauptschleife_id)
-        self.after(100, self.tatsaechlich_schliessen)
+        # hauptschleifen (Thread) auslaufen lassen, sodass keine geloeschten Variablen referenziert werden
+        self.after(100, self._schliessen)
 
-    def tatsaechlich_schliessen(self):
-        if not self.running:
-            self.destroy()
-            AuswertungFenster(self.hauptfenster, self.spiel)
+    def _schliessen(self):
+        self.destroy()
+        AuswertungFenster(self.hauptfenster, self.spiel)
 
-            self.spiel.spiel_fenster = None
-            self.spiel = None
-            del self.spiel
-            del self
+        # zirkulaere Refenz entfernen
+        self.spiel.spiel_fenster = None
+        self.spiel = None
+        del self.spiel
+        del self

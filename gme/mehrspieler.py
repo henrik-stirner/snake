@@ -25,15 +25,15 @@ from gme.obj.konsumgut import Apfel
 
 
 class MehrspielerSpiel(Spiel):
-    def __init__(self, spiel_fenster):
+    def __init__(self, spiel_fenster, spieler0: str, spieler1: str):
         super().__init__(spiel_fenster)
         self.erlaubte_eingaben += "wasdijkl"
 
-        self.schlange_wasd = SchlangenKopf("wasd", self, (self.spiel_fenster.w) // 4, (self.spiel_fenster.h) // 2, "o", 2)
-        self.schlange_ijkl = SchlangenKopf("ijkl", self, (self.spiel_fenster.w) // 4 * 3, (self.spiel_fenster.h) // 2, "o", 2)
+        self.schlange0 = SchlangenKopf(spieler0, self, (self.spiel_fenster.w) // 4, (self.spiel_fenster.h) // 2, "o", 2)
+        self.schlange1 = SchlangenKopf(spieler1, self, (self.spiel_fenster.w) // 4 * 3, (self.spiel_fenster.h) // 2, "o", 2)
         self.apfel = Apfel(self, *self.zufaellige_freie_kachel())
 
-        self.spielobjekte += [self.schlange_wasd, self.schlange_ijkl, self.apfel]
+        self.spielobjekte += [self.schlange0, self.schlange1, self.apfel]
 
     def aktualisieren(self):
         for spielobjekt in self.spielobjekte:
@@ -45,19 +45,19 @@ class MehrspielerSpiel(Spiel):
     def eingabe_verarbeiten(self, eingabe):
         match eingabe:
             case "w":
-                self.schlange_wasd.richtung = "o"
+                self.schlange0.richtung = "o"
             case "a":
-                self.schlange_wasd.richtung = "l"
+                self.schlange0.richtung = "l"
             case "s":
-                self.schlange_wasd.richtung = "u"
+                self.schlange0.richtung = "u"
             case "d":
-                self.schlange_wasd.richtung = "r"
+                self.schlange0.richtung = "r"
 
             case "i":
-                self.schlange_ijkl.richtung = "o"
+                self.schlange1.richtung = "o"
             case "j":
-                self.schlange_ijkl.richtung = "l"
+                self.schlange1.richtung = "l"
             case "k":
-                self.schlange_ijkl.richtung = "u"
+                self.schlange1.richtung = "u"
             case "l":
-                self.schlange_ijkl.richtung = "r"
+                self.schlange1.richtung = "r"

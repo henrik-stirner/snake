@@ -28,6 +28,9 @@ ttk::style theme create dunkel -parent clam -settings {
     # Schriftarten
     ttk::style configure Big.TButton -font [list $system_font $big bold]
 
+    # Entry
+    ttk::style configure TEntry -background black -foreground white -fieldbackground black -darkcolor white -lightcolor black -borderwidth 3 -relief flat -padding {10 5}
+
     # Combobox
     ttk::style configure TCombobox -background black -foreground white -fieldbackground black -lightcolor black -darkcolor black -arrowcolor white -arrowsize 17 -borderwidth 3 -relief flat -padding {10 5}
     # Liste

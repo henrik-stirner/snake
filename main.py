@@ -77,6 +77,9 @@ from win.launcher import Launcher
 # ----------
 
 
+script = __file__
+
+
 def main():
     launcher = Launcher()
     while launcher.running:
@@ -84,7 +87,7 @@ def main():
 
     if launcher.wiederholen:
         del launcher
-        system(f"python {__file__}")
+        system(f"python {script}")
 
 
 if __name__ == "__main__": 
