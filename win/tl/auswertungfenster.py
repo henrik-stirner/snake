@@ -79,8 +79,8 @@ class AuswertungFenster(Nebenfenster):
             score_label.pack(expand=True, fill=X)
 
         # Wiederholen-Knopf
-        self.wiederholen_knopf = Button(self.frame, style="Big.TButton", text="ERNEUT SPIELEN", command=self.eingabe)
-        self.wiederholen_knopf.pack(fill=X)
+        self.zurueck_knopf = Button(self.frame, style="Big.TButton", text="ZURÜCK", command=self.eingabe)
+        self.zurueck_knopf.pack(fill=X)
 
         # Beenden-Knopf
         self.beenden_knopf = Button(self.frame, style="Big.TButton", text="BEENDEN", command=self.abbruch)
@@ -88,7 +88,11 @@ class AuswertungFenster(Nebenfenster):
 
     def eingabe(self):
         self.schliessen()
-        self.hauptfenster.spiel_starten()
+        self.hauptfenster.wiederholen = True
+        self.hauptfenster.running = False
+        self.hauptfenster.schliessen()
 
     def abbruch(self):
         self.schliessen()
+        self.hauptfenster.running = False
+        self.hauptfenster.schliessen()

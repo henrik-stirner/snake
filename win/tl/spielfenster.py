@@ -121,3 +121,8 @@ class SpielFenster(Nebenfenster):
         if not self.running:
             self.destroy()
             AuswertungFenster(self.hauptfenster, self.spiel)
+
+            self.spiel.spiel_fenster = None
+            self.spiel = None
+            del self.spiel
+            del self

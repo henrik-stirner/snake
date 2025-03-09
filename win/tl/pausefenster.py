@@ -28,6 +28,8 @@ class PauseFenster(Nebenfenster):
     def __init__(self, spiel_fenster) -> None:
         super().__init__(spiel_fenster)
         self.title("Pause")
+
+        self.hauptfenster.running = False
     
         self.interface_generieren()
         self.mainloop()

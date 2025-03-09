@@ -29,8 +29,10 @@ class Launcher(Hauptfenster):
         super().__init__()
         self.title("Launcher")
 
+        self.running = True
+        self.wiederholen = False
+
         self.interface_generieren()
-        self.mainloop()
 
     def interface_generieren(self) -> None:
         super().interface_generieren()

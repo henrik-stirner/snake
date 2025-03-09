@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 import logging.config
-from os import walk, remove
+from os import walk, remove, system
 from datetime import datetime
 
 # ----------
@@ -78,7 +78,13 @@ from win.launcher import Launcher
 
 
 def main():
-    Launcher()
+    launcher = Launcher()
+    while launcher.running:
+        launcher.update()
+
+    if launcher.wiederholen:
+        del launcher
+        system(f"python {__file__}")
 
 
 if __name__ == "__main__": 
