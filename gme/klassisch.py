@@ -27,7 +27,7 @@ from gme.obj.konsumgut import Apfel
 class KlassischesSpiel(Spiel):
     def __init__(self, spiel_fenster, spieler0: str):
         super().__init__(spiel_fenster)
-        self.erlaubte_eingaben += "wasd"
+        self.erlaubte_eingaben += config["Steuerung"]["spieler0"]
 
         self.schlange0 = SchlangenKopf(spieler0, self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
         self.apfel = Apfel(self, *self.zufaellige_freie_kachel())
@@ -42,12 +42,6 @@ class KlassischesSpiel(Spiel):
         super().aktualisieren()
 
     def eingabe_verarbeiten(self, eingabe):
-        match eingabe:
-            case "w":
-                self.schlange0.richtung = "o"
-            case "a":
-                self.schlange0.richtung = "l"
-            case "s":
-                self.schlange0.richtung = "u"
-            case "d":
-                self.schlange0.richtung = "r"
+        # Richtung: w -> o (oben), a -> l (links), usw.
+        richtung0 = "olur"[self.erlaubte_eingaben.index(eingabe)]
+        self.schlange0.richtung= richtung0
