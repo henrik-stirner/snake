@@ -24,7 +24,7 @@ from win.tl.auswertungfenster import AuswertungFenster
 
 from gme.klassisch import KlassischesSpiel
 from gme.mehrspieler import MehrspielerSpiel
-# from gme.mehrspieler import #
+from gme.wandlos import WandlosSpiel
 from gme.computer import ComputerSpiel
 from gme.simulation import SimulationSpiel
 
@@ -56,7 +56,7 @@ class SpielFenster(Nebenfenster):
             case "Mehrspieler":
                 NameEingabeFenster(self, 2)
             case "Wandlos":
-                pass
+                NameEingabeFenster(self, 1)
             case "Gegen Computer": 
                 NameEingabeFenster(self, 1)
             case "Simulation":
@@ -70,7 +70,7 @@ class SpielFenster(Nebenfenster):
             case "Mehrspieler":
                 self.spiel = MehrspielerSpiel(self, *namen)
             case "Wandlos":
-                pass
+                self.spiel = WandlosSpiel(self, *namen)
             case "Gegen Computer": 
                 self.spiel = ComputerSpiel(self, *namen)
             case "Simulation":
@@ -115,7 +115,7 @@ class SpielFenster(Nebenfenster):
             # Es gibt nur ein Objekt in der Zelle, und das ist der Frame.
             return self.spielfeld.grid_slaves(column=column, row=row)[0]
         except Exception as e:
-            logger.error(e)
+            logger.exception(e)
 
     def kachel_faerben(self, x, y, farbe):
         if not ((0 <= x <= self.w - 1) and (0 <= y <= self.h - 1)):

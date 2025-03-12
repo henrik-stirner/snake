@@ -40,7 +40,7 @@ class AuswertungFenster(Nebenfenster):
         super().interface_generieren()
 
         # Datenermittlung (Auswertung)
-        gewinner = None
+        gewinner = []
 
         for obj in self.spiel.spielobjekte:
             if not isinstance(obj, SchlangenKopf):
@@ -48,16 +48,22 @@ class AuswertungFenster(Nebenfenster):
 
             self.schlangen.append(obj)
 
-            if not obj.tot:
-                if gewinner is None:
-                    gewinner = obj
-                elif obj.laenge > gewinner.laenge:
-                    gewinner = obj
+            if not gewinner:
+                # extra if-clause, da liste mit Laenge groesser 1 fuer weitere Bedingungen vorausgesetzt
+                gewinner = [obj]
+            elif ((obj.laenge > gewinner[0].laenge) or
+                  (obj.laenge == gewinner[0].laenge and gewinner[0].tot and not obj.tot)
+            ):
+                gewinner = [obj]
+            elif obj.laenge == gewinner[0].laenge and obj.tot == gewinner[0].tot:
+                gewinner.append(obj)
 
         self.schlangen.sort(key=lambda obj: obj.laenge, reverse=True)
 
         # Anzeige
-        self.gewinner_label = Label(self.frame, style="Big.TLabel", text=f"{gewinner.name} hat das Spiel gewonnen!")
+        self.gewinner_label = Label(
+            self.frame, style="Big.TLabel",
+            text=f"{', '.join([schlange.name for schlange in gewinner])} {'haben' if len(gewinner) > 1 else 'hat'} das Spiel gewonnen!")
         self.gewinner_label.pack()
 
         self.anzeige_frame = Frame(self.frame)

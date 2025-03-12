@@ -38,8 +38,10 @@ class SchlangenGlied(SpielObjekt):
 class SchlangenKopf(SpielObjekt):
     erlaubte_richtungen = ((1, 0), (-1, 0), (0, 1), (0, -1))
 
-    def __init__(self, name, spiel, x, y, richtung, laenge, farbe="darkgreen", lebensdauer=None):
+    def __init__(self, name, spiel, x, y, richtung, laenge, farbe="darkgreen", lebensdauer=None, wand_teleport=False):
         super().__init__(spiel, x, y, farbe, 2, lebensdauer)
+
+        self.wand_teleport = wand_teleport
 
         self.name = name
         self.gliedfarbe = self.farbe.removeprefix("dark") if self.farbe.startswith("dark") else self.farbe
@@ -75,11 +77,19 @@ class SchlangenKopf(SpielObjekt):
 
         # EIN FELD WEITER
 
-        if not (0 <= self.x <= self.spiel.spiel_fenster.w-1) or not (0 <= self.y <= self.spiel.spiel_fenster.h-1):
-            # gegen Wand gefahren
-            self.tot = True
-        elif any(isinstance(obj, SchlangenGlied) for obj in self.spiel.objekte_auf_kachel(self.x, self.y)):
+        if not all([isinstance(obj, Konsumgut) or obj == self for obj in self.spiel.objekte_auf_kachel(self.x, self.y)]):
             # in Schlange gefahren
+            self.tot = True
+        elif self.wand_teleport:
+            if self.x < 0:
+                self.x = self.spiel.spiel_fenster.w - 1
+            elif self.x > self.spiel.spiel_fenster.w - 1:
+                self.x = 0
+            if self.y < 0:
+                self.y = self.spiel.spiel_fenster.h - 1
+            elif self.y > self.spiel.spiel_fenster.h - 1:
+                self.y = 0
+        elif not (0 <= self.x <= self.spiel.spiel_fenster.w - 1) or not (0 <= self.y <= self.spiel.spiel_fenster.h - 1):
             self.tot = True
 
         super().aktualisieren()
