@@ -185,3 +185,14 @@ Henrik	2
 Henrik	2
 Henrik	2
 Henrik	5
+Henrik	11
+Henrik	2
+Spieler0	2
+Henrik	4
+Spieler0	4
+Henrik	24
+Computer	13
+Henrik	9
+Computer	12
+Computer	6
+Henrik	2

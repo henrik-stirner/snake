@@ -80,7 +80,8 @@ class AuswertungFenster(Nebenfenster):
         self.score_info_label = Label(self.score_frame, text="SCORE")
         self.score_info_label.pack(expand=True, fill=X, pady=10)
 
-        farbe = lambda obj: "red" if obj.tot else "green" if obj.name == gewinner.name else "white"
+        gewinner_namen = [obj.name for obj in gewinner]
+        farbe = lambda obj: "red" if obj.tot else "green" if obj.name in gewinner_namen else "white"
         for obj in self.schlangen:
             spieler_label = Label(self.spieler_frame, foreground=farbe(obj), text=obj.name)
             spieler_label.pack(expand=True, fill=X)
