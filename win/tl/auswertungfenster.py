@@ -57,6 +57,9 @@ class AuswertungFenster(Nebenfenster):
         self.schlangen.sort(key=lambda obj: obj.laenge, reverse=True)
 
         # Anzeige
+        self.gewinner_label = Label(self.frame, style="Big.TLabel", text=f"{gewinner.name} hat das Spiel gewonnen!")
+        self.gewinner_label.pack(pady=10)
+
         self.anzeige_frame = Frame(self.frame)
         self.anzeige_frame.grid_columnconfigure(tuple(range(2)), weight=1)
         self.anzeige_frame.pack(pady=25, padx=25)
