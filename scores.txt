@@ -160,3 +160,9 @@ Computer	8
 Henrik	6
 Computer	11
 Henrik	7
+Computer	8
+Henrik	4
+Henrik	10
+Computer	10
+Henrik	15
+Computer	15

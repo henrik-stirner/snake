@@ -58,7 +58,7 @@ class AuswertungFenster(Nebenfenster):
 
         # Anzeige
         self.gewinner_label = Label(self.frame, style="Big.TLabel", text=f"{gewinner.name} hat das Spiel gewonnen!")
-        self.gewinner_label.pack(pady=10)
+        self.gewinner_label.pack()
 
         self.anzeige_frame = Frame(self.frame)
         self.anzeige_frame.grid_columnconfigure(tuple(range(2)), weight=1)
