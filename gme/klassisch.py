@@ -25,14 +25,14 @@ from gme.obj.konsumgut import Apfel
 
 
 class KlassischesSpiel(Spiel):
-    def __init__(self, spiel_fenster, spieler0: str):
+    def __init__(self, spiel_fenster, spieler_name: str):
         super().__init__(spiel_fenster)
-        self.erlaubte_eingaben += config["Steuerung"]["spieler0"]
+        self.erlaubte_eingaben += config["Steuerung"]["spieler_0"]
 
-        self.schlange0 = SchlangenKopf(spieler0, self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
+        self.schlange = SchlangenKopf(spieler_name, self, (self.spiel_fenster.w - 1) // 2, (self.spiel_fenster.h - 1) // 2, "o", 2)
         self.apfel = Apfel(self, *self.zufaellige_freie_kachel())
 
-        self.spielobjekte += [self.schlange0, self.apfel]
+        self.spielobjekte += [self.schlange, self.apfel]
 
     def aktualisieren(self):
         for spielobjekt in self.spielobjekte:
@@ -43,5 +43,5 @@ class KlassischesSpiel(Spiel):
 
     def eingabe_verarbeiten(self, eingabe):
         # Richtung: w -> o (oben), a -> l (links), usw.
-        richtung0 = "olur"[self.erlaubte_eingaben.index(eingabe)]
-        self.schlange0.richtung= richtung0
+        richtung = "olur"[self.erlaubte_eingaben.index(eingabe)]
+        self.schlange.richtung = richtung

@@ -11,8 +11,6 @@ from tkinter.ttk import *
 # ----------
 
 config = ConfigParser()
-config.read("./config.ini")
-
 logger = logging.getLogger(__name__)
 
 # ----------
@@ -35,6 +33,8 @@ class Nebenfenster(Toplevel):
 		self.stil.theme_use(stil_name)
 
 		self.focus_force()
+		
+		config.read("./config.ini")
 		self.geometry(
 			f"{config["Fenster"]["w"]}x{config["Fenster"]["h"]}+{config["Fenster"]["x"]}+{config["Fenster"]["y"]}"
 		)

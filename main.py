@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 import logging.config
-from os import walk, remove, system
+from os import walk, remove, system, path, mkdir
 from datetime import datetime
 
 # ----------
@@ -41,6 +41,8 @@ report suppressed errors without raising exceptions:
 ----------
 """
 
+if not path.exists("./log"):
+    mkdir("./log")
 
 # only keep up to 5 log files
 logfiles = list(filter(

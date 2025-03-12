@@ -23,8 +23,8 @@ from gme.obj.konsumgut import Konsumgut
 
 
 class SchlangenGlied(SpielObjekt):
-    def __init__(self, spiel, schlangenkopf, lebensdauer):
-        super().__init__(spiel, schlangenkopf.x, schlangenkopf.y, "green", 1, lebensdauer)
+    def __init__(self, spiel, schlangenkopf, farbe, lebensdauer):
+        super().__init__(spiel, schlangenkopf.x, schlangenkopf.y, farbe, 1, lebensdauer)
 
         self.kopf = schlangenkopf
 
@@ -36,10 +36,11 @@ class SchlangenGlied(SpielObjekt):
 
 
 class SchlangenKopf(SpielObjekt):
-    def __init__(self, name, spiel, x, y, richtung, laenge, lebensdauer=None):
+    def __init__(self, name, spiel, x, y, richtung, laenge, farbe="darkgreen", lebensdauer=None):
         super().__init__(spiel, x, y, "darkgreen", 2, lebensdauer)
 
         self.name = name
+        self.gliedfarbe = self.farbe.removeprefix("dark") if self.farbe.startswith("dark") else self.farbe
 
         # links, rechts, oben, unten
         self.richtung = richtung
@@ -57,7 +58,7 @@ class SchlangenKopf(SpielObjekt):
 
         # Bombe
         if self.laenge:
-            neues_schlangenglied = SchlangenGlied(self.spiel, self, self.laenge)
+            neues_schlangenglied = SchlangenGlied(self.spiel, self, self.gliedfarbe, self.laenge)
             self.spiel.spielobjekte.append(neues_schlangenglied)
 
         # Bewegen: NACH BOMBE UND KONSUM

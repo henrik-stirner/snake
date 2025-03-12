@@ -95,7 +95,7 @@ class Launcher(Hauptfenster):
         self.score_frame = Frame(self.ranking_frame)
         self.score_frame.grid(row=0, column=1, sticky="news")
 
-        with open("scores.txt", "r") as lesedatei:
+        with open("scores.txt", "r", encoding="utf-8") as lesedatei:
             scores = [zeile for zeile in lesedatei.readlines() if (zeile.strip())]
             scores.sort(key=lambda x: int(x.split()[1]), reverse=True)
 

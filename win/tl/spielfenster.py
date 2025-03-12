@@ -24,6 +24,8 @@ from win.tl.auswertungfenster import AuswertungFenster
 
 from gme.klassisch import KlassischesSpiel
 from gme.mehrspieler import MehrspielerSpiel
+# from gme.mehrspieler import #
+from gme.computer import ComputerSpiel
 
 # ----------
 
@@ -53,6 +55,10 @@ class SpielFenster(Nebenfenster):
                 NameEingabeFenster(self, 1)
             case "Mehrspieler":
                 NameEingabeFenster(self, 2)
+            case "Wandlos":
+                pass
+            case "Gegen Computer": 
+                NameEingabeFenster(self, 1)
 
     def spiel_starten(self, namen: list[str]):
         match self.spielart:
@@ -60,6 +66,10 @@ class SpielFenster(Nebenfenster):
                 self.spiel = KlassischesSpiel(self, *namen)
             case "Mehrspieler":
                 self.spiel = MehrspielerSpiel(self, *namen)
+            case "Wandlos":
+                pass
+            case "Gegen Computer": 
+                self.spiel = ComputerSpiel(self, *namen)
 
         self.hauptschleife()
 

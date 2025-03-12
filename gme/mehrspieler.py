@@ -25,16 +25,16 @@ from gme.obj.konsumgut import Apfel
 
 
 class MehrspielerSpiel(Spiel):
-    def __init__(self, spiel_fenster, spieler0: str, spieler1: str):
+    def __init__(self, spiel_fenster, spieler_0_name: str, spieler_1_name: str):
         super().__init__(spiel_fenster)
-        self.erlaubte_eingaben +=  config["Steuerung"]["spieler0"] + config["Steuerung"]["spieler1"]
+        self.erlaubte_eingaben +=  config["Steuerung"]["spieler_0"] + config["Steuerung"]["spieler_1"]
         print(self.erlaubte_eingaben)
 
-        self.schlange0 = SchlangenKopf(spieler0, self, (self.spiel_fenster.w) // 4, (self.spiel_fenster.h) // 2, "o", 2)
-        self.schlange1 = SchlangenKopf(spieler1, self, (self.spiel_fenster.w) // 4 * 3, (self.spiel_fenster.h) // 2, "o", 2)
+        self.schlange_0 = SchlangenKopf(spieler_0_name, self, (self.spiel_fenster.w) // 4, (self.spiel_fenster.h) // 2, "o", 2)
+        self.schlange_1 = SchlangenKopf(spieler_1_name, self, (self.spiel_fenster.w) // 4 * 3, (self.spiel_fenster.h) // 2, "o", 2)
         self.apfel = Apfel(self, *self.zufaellige_freie_kachel())
 
-        self.spielobjekte += [self.schlange0, self.schlange1, self.apfel]
+        self.spielobjekte += [self.schlange_0, self.schlange_1, self.apfel]
 
     def aktualisieren(self):
         for spielobjekt in self.spielobjekte:
@@ -47,8 +47,8 @@ class MehrspielerSpiel(Spiel):
         # Richtung: w -> o (oben), a -> l (links), usw.
         i = self.erlaubte_eingaben.index(eingabe)
         if i < 4:
-            richtung0 = "olur"[i]
-            self.schlange0.richtung = richtung0
+            richtung_0 = "olur"[i]
+            self.schlange_0.richtung = richtung_0
         else:
-            richtung1 = "olur"[i-4]
-            self.schlange1.richtung= richtung1
+            richtung_1 = "olur"[i-4]
+            self.schlange_1.richtung = richtung_1
