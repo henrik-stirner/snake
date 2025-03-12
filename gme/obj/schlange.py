@@ -36,15 +36,23 @@ class SchlangenGlied(SpielObjekt):
 
 
 class SchlangenKopf(SpielObjekt):
+    erlaubte_richtungen = ((1, 0), (-1, 0), (0, 1), (0, -1))
+
     def __init__(self, name, spiel, x, y, richtung, laenge, farbe="darkgreen", lebensdauer=None):
-        super().__init__(spiel, x, y, "darkgreen", 2, lebensdauer)
+        super().__init__(spiel, x, y, farbe, 2, lebensdauer)
 
         self.name = name
         self.gliedfarbe = self.farbe.removeprefix("dark") if self.farbe.startswith("dark") else self.farbe
 
-        # links, rechts, oben, unten
         self.richtung = richtung
         self.laenge = laenge
+
+    def drehen(self, neue_richtung: tuple[int, int]):
+        # 180-Grad-Wende verhindern
+        if self.richtung[0] == -neue_richtung[0] and self.richtung[1] == -neue_richtung[1]:
+            return
+
+        self.richtung = neue_richtung
 
     def aktualisieren(self):
         # AUSGANGSFELD
@@ -52,7 +60,7 @@ class SchlangenKopf(SpielObjekt):
         # Konsum
         if spielobjekte := self.spiel.objekte_auf_kachel(self.x, self.y):
             for spielobjekt in spielobjekte:
-                if isinstance(spielobjekt, Konsumgut):
+                if isinstance(spielobjekt, Konsumgut) and not spielobjekt.konsumiert:
                     self.laenge += spielobjekt.wertigkeit
                     spielobjekt.konsumiert = True
 
@@ -62,15 +70,8 @@ class SchlangenKopf(SpielObjekt):
             self.spiel.spielobjekte.append(neues_schlangenglied)
 
         # Bewegen: NACH BOMBE UND KONSUM
-        match self.richtung:
-            case "l":
-                self.x -= 1
-            case "r":
-                self.x += 1
-            case "o":
-                self.y -= 1
-            case "u":
-                self.y += 1
+        self.x += self.richtung[0]
+        self.y += self.richtung[1]
 
         # EIN FELD WEITER
 
@@ -78,7 +79,7 @@ class SchlangenKopf(SpielObjekt):
             # gegen Wand gefahren
             self.tot = True
         elif any(isinstance(obj, SchlangenGlied) for obj in self.spiel.objekte_auf_kachel(self.x, self.y)):
-            # in sich selbst gefahren
+            # in Schlange gefahren
             self.tot = True
 
         super().aktualisieren()

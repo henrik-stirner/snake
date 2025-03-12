@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 # eigene imports
 # ----------
 
+from gme.obj.schlange import Konsumgut
 from gme.obj.schlange import SchlangenKopf
 
 # ----------
@@ -70,6 +71,19 @@ class Spiel:
                 objekte.append(spielobjekt)
 
         return objekte
+
+    def instanz_auf_kachel(self, x, y, typ: Type):
+        return any([isinstance(obj, typ) for obj in self.objekte_auf_kachel(x, y)])
+
+    def kachel_begehbar(self, x, y):
+        if not ((0 <= x <= self.spiel_fenster.w - 1) and (0 <= y <= self.spiel_fenster.h - 1)):
+            # nicht auf Spielfeld
+            return False
+
+        if not all([isinstance(obj, Konsumgut) for obj in self.objekte_auf_kachel(x, y)]):
+            return False
+
+        return True
 
     def zufaellige_freie_kachel(self):
         x, y = self.zufaellige_kachel()

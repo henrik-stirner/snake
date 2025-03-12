@@ -79,7 +79,7 @@ class Launcher(Hauptfenster):
         # Modus-Dropdown
         self.modus_dropdown = Combobox(self.frame,
             state="readonly",
-            values=["Klassisch", "Mehrspieler", "Gegen Computer"]
+            values=["Klassisch", "Mehrspieler", "Wandlos", "Gegen Computer", "Simulation"]
         )
         self.modus_dropdown.current(int(config["Spiel"]["mode"]))
         self.modus_dropdown.pack(pady=10)

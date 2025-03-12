@@ -26,6 +26,7 @@ from gme.klassisch import KlassischesSpiel
 from gme.mehrspieler import MehrspielerSpiel
 # from gme.mehrspieler import #
 from gme.computer import ComputerSpiel
+from gme.simulation import SimulationSpiel
 
 # ----------
 
@@ -49,7 +50,6 @@ class SpielFenster(Nebenfenster):
 
         self.interface_generieren()
 
-        self.withdraw()
         match spielart:
             case "Klassisch":
                 NameEingabeFenster(self, 1)
@@ -59,8 +59,11 @@ class SpielFenster(Nebenfenster):
                 pass
             case "Gegen Computer": 
                 NameEingabeFenster(self, 1)
+            case "Simulation":
+                self.spiel_starten(None)
 
-    def spiel_starten(self, namen: list[str]):
+
+    def spiel_starten(self, namen: list[str] = None):
         match self.spielart:
             case "Klassisch":
                 self.spiel = KlassischesSpiel(self, *namen)
@@ -70,6 +73,8 @@ class SpielFenster(Nebenfenster):
                 pass
             case "Gegen Computer": 
                 self.spiel = ComputerSpiel(self, *namen)
+            case "Simulation":
+                self.spiel = SimulationSpiel(self)
 
         self.hauptschleife()
 
@@ -113,6 +118,12 @@ class SpielFenster(Nebenfenster):
             logger.error(e)
 
     def kachel_faerben(self, x, y, farbe):
+        if not ((0 <= x <= self.w - 1) and (0 <= y <= self.h - 1)):
+            logger.warning(f"Kachel ({x}, {y}) liegt außerhalb des Spielfelds")
+            return
+
+        # Manchmal gibt es hier Probleme mit persistenten referenzen von Widgets seitens tcl
+        # Die entsprechenden Objekte werden womöglich nicht sachgemäß vom Garbage Collector gelöscht?
         try:
             kachel = self.kacheln[x][y]
             if kachel and kachel.winfo_exists():
@@ -126,6 +137,7 @@ class SpielFenster(Nebenfenster):
         if self.running:
             try:
                 self.spiel.aktualisieren()
+                self.update()
             except Exception as e:
                 logger.error(e)
 
