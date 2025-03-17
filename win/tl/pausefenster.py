@@ -9,9 +9,6 @@ from tkinter.ttk import *
 # config und logger
 # ----------
 
-config = ConfigParser()
-config.read("./config.ini")
-
 logger = logging.getLogger(__name__)
 
 # ----------

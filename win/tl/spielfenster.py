@@ -8,9 +8,6 @@ from tkinter.ttk import *
 # config und logger
 # ----------
 
-config = ConfigParser()
-config.read("./config.ini")
-
 logger = logging.getLogger(__name__)
 
 # ----------
@@ -32,12 +29,12 @@ from gme.simulation import SimulationSpiel
 
 
 class SpielFenster(Nebenfenster):
-    w, h = int(config["Spiel"]["w"]), int(config["Spiel"]["h"])
-    eingaben = []
-
     def __init__(self, launcher_fenster, spielart) -> None:
         super().__init__(launcher_fenster)
         self.title(f"{spielart}")
+
+        w, h = int(self.config["Spiel"]["w"]), int(self.config["Spiel"]["h"])
+        eingaben = []
 
         self.kacheln = [[None for _ in range(self.h)] for _ in range(self.w)]
 

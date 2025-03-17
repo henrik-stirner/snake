@@ -7,11 +7,8 @@ import random
 
 
 # ----------
-# config und logger
+# logger
 # ----------
-
-config = ConfigParser()
-config.read("./config.ini")
 
 logger = logging.getLogger(__name__)
 

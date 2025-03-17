@@ -10,9 +10,6 @@ from tkinter.ttk import *
 # config und logger
 # ----------
 
-config = ConfigParser()
-config.read("./config.ini")
-
 logger = logging.getLogger(__name__)
 
 # ----------
@@ -124,9 +121,9 @@ class Launcher(Hauptfenster):
 
     def einstellungen_speichern(self):
         # gewaehlten Modus speichern
-        config.set("Spiel", "mode", str(self.modus_dropdown.current()))
+        self.config.set("Spiel", "mode", str(self.modus_dropdown.current()))
         with open("config.ini", "w") as configfile:
-            config.write(configfile)
+            self.config.write(configfile)
 
     def schliessen(self):
         self.running = False

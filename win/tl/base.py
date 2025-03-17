@@ -10,7 +10,6 @@ from tkinter.ttk import *
 # config und logger
 # ----------
 
-config = ConfigParser()
 logger = logging.getLogger(__name__)
 
 # ----------
@@ -33,10 +32,11 @@ class Nebenfenster(Toplevel):
 		self.stil.theme_use(stil_name)
 
 		self.focus_force()
-		
-		config.read("./config.ini")
+
+		self.config = ConfigParser()
+		self.config.read("./config.ini")
 		self.geometry(
-			f"{config["Fenster"]["w"]}x{config["Fenster"]["h"]}+{config["Fenster"]["x"]}+{config["Fenster"]["y"]}"
+			f"{self.config["Fenster"]["w"]}x{self.config["Fenster"]["h"]}+{self.config["Fenster"]["x"]}+{self.config["Fenster"]["y"]}"
 		)
 
 		self.protocol("WM_DELETE_WINDOW", self.schliessen)

@@ -8,9 +8,6 @@ from tkinter.ttk import *
 # config und logger
 # ----------
 
-config = ConfigParser()
-config.read("./config.ini")
-
 logger = logging.getLogger(__name__)
 
 # ----------
@@ -88,9 +85,9 @@ class NameEingabeFenster(Nebenfenster):
 
 	def einstellungen_speichern(self):
 		# Nutzernamen speichern
-		config.set("Spiel", "nutzername", str(self.entries[0].get()))
+		self.config.set("Spiel", "nutzername", str(self.entries[0].get()))
 		with open("config.ini", "w") as configfile:
-			config.write(configfile)
+			self.config.write(configfile)
 
 	def schliessen(self):
 		pass

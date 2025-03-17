@@ -9,9 +9,6 @@ from random import randint
 # config und logger
 # ----------
 
-config = ConfigParser()
-config.read("./config.ini")
-
 logger = logging.getLogger(__name__)
 
 # ----------
@@ -25,11 +22,15 @@ from gme.obj.schlange import SchlangenKopf
 
 
 class Spiel:
-    erlaubte_eingaben = ""
-    delay = config["Spiel"]["delay"]
-    spielobjekte = []
-
     def __init__(self, spiel_fenster):
+        self.config = ConfigParser()
+        self.config.read("./config.ini")
+
+        self.delay = self.config["Spiel"]["delay"]
+
+        self.erlaubte_eingaben = ""
+        self.spielobjekte = []
+
         self.spiel_fenster = spiel_fenster
 
     def aktualisieren(self):

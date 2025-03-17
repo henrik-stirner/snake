@@ -3,14 +3,6 @@ import logging.config
 from os import walk, remove, system, path, mkdir
 from datetime import datetime
 
-# ----------
-# config
-# ----------
-
-
-config = ConfigParser()
-config.read("./config.ini")
-
 
 # ----------
 # logging

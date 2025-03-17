@@ -8,9 +8,6 @@ from tkinter.ttk import *
 # config und logger
 # ----------
 
-config = ConfigParser()
-config.read("./config.ini")
-
 logger = logging.getLogger(__name__)
 
 # ----------
@@ -47,7 +44,7 @@ class EinstellungFenster(Nebenfenster):
         self.einstellungen_frame.pack(pady=10, expand=True, fill=BOTH)
 
         i = 1
-        for kategorie in config.keys():
+        for kategorie in self.config.keys():
             ueberschrift_label = Label(self.einstellungen_frame.interior, text=kategorie)
             ueberschrift_label.grid(row=i, column=0, columnspan=2, pady=20)
 
@@ -57,7 +54,7 @@ class EinstellungFenster(Nebenfenster):
             einstellung_frame = Frame(self.einstellungen_frame.interior)
             einstellung_frame.grid(row=i+1, column=1, sticky="w")
 
-            for bezeichner, parameter in config[kategorie].items():
+            for bezeichner, parameter in self.config[kategorie].items():
                 info_label = Label(info_frame, text=bezeichner, anchor=E)
                 info_label.pack(anchor=E, expand=True)
                 einstellung_entry = Entry(einstellung_frame)
@@ -70,10 +67,10 @@ class EinstellungFenster(Nebenfenster):
 
     def einstellungen_speichern(self):
         i = 0
-        for kategorie in config.keys():
-            for bezeichner in config[kategorie].keys():
-                config.set(kategorie, bezeichner, str(self.entries[i].get()))
+        for kategorie in self.config.keys():
+            for bezeichner in self.config[kategorie].keys():
+                self.config.set(kategorie, bezeichner, str(self.entries[i].get()))
                 i += 1
 
         with open("config.ini", "w") as configfile:
-            config.write(configfile)
+            self.config.write(configfile)

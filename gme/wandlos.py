@@ -7,9 +7,6 @@ import logging
 # config und logger
 # ----------
 
-config = ConfigParser()
-config.read("./config.ini")
-
 logger = logging.getLogger(__name__)
 
 # ----------
@@ -27,7 +24,7 @@ from gme.obj.konsumgut import Apfel
 class WandlosSpiel(Spiel):
     def __init__(self, spiel_fenster, spieler_name: str):
         super().__init__(spiel_fenster)
-        self.erlaubte_eingaben += config["Steuerung"]["spieler_0"]
+        self.erlaubte_eingaben += self.config["Steuerung"]["spieler_0"]
         self.richtung_eingaben = {
             self.erlaubte_eingaben[0]: (0, -1),     # w -> oben
             self.erlaubte_eingaben[1]: (-1, 0),     # a -> links
