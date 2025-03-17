@@ -49,7 +49,10 @@ class SpielFenster(Nebenfenster):
 
         match spielart:
             case "Klassisch":
-                NameEingabeFenster(self, 1)
+                if name := self.config["Spiel"]["nutzername"]:
+                    self.spiel_starten([name])
+                else:
+                    NameEingabeFenster(self, 1)
             case "Mehrspieler":
                 NameEingabeFenster(self, 2)
             case "Wandlos":

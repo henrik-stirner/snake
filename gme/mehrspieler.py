@@ -56,6 +56,6 @@ class MehrspielerSpiel(Spiel):
         if eingabe in self.richtung_eingaben_0:
             neue_richtung_0 = self.richtung_eingaben_0[eingabe]
             self.schlange_0.drehen(neue_richtung_0)
-        else:
+        if eingabe in self.richtung_eingaben_1:
             neue_richtung_1 = self.richtung_eingaben_1[eingabe]
             self.schlange_1.drehen(neue_richtung_1)

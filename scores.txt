@@ -206,3 +206,4 @@ Henrik	2
 Spieler0	2
 Computer	10
 Computer	8
+Henrik	7
