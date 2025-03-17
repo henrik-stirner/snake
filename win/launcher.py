@@ -78,7 +78,7 @@ class Launcher(Hauptfenster):
             state="readonly",
             values=["Klassisch", "Mehrspieler", "Wandlos", "Gegen Computer", "Simulation"]
         )
-        self.modus_dropdown.current(int(config["Spiel"]["mode"]))
+        self.modus_dropdown.current(int(self.config["Spiel"]["mode"]))
         self.modus_dropdown.pack(pady=10)
 
         # Ranking
@@ -127,4 +127,4 @@ class Launcher(Hauptfenster):
 
     def schliessen(self):
         self.running = False
-        self.destroy()
+        super().schliessen()

@@ -33,8 +33,8 @@ class SpielFenster(Nebenfenster):
         super().__init__(launcher_fenster)
         self.title(f"{spielart}")
 
-        w, h = int(self.config["Spiel"]["w"]), int(self.config["Spiel"]["h"])
-        eingaben = []
+        self.w, self.h = int(self.config["Spiel"]["w"]), int(self.config["Spiel"]["h"])
+        self.eingaben = []
 
         self.kacheln = [[None for _ in range(self.h)] for _ in range(self.w)]
 

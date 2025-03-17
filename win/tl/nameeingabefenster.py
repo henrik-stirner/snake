@@ -39,7 +39,7 @@ class NameEingabeFenster(Nebenfenster):
 		self.knopf_frame.pack(expand=True, fill=X, pady=10)
 
 		standard_entry = self.entry_erstellen()
-		standard_entry.insert(0, config["Spiel"]["nutzername"])
+		standard_entry.insert(0, self.config["Spiel"]["nutzername"])
 
 		if spielerzahl is not None:
 			num_len = len(str(spielerzahl))

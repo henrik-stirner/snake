@@ -196,3 +196,13 @@ Henrik	9
 Computer	12
 Computer	6
 Henrik	2
+Computer	5
+Computer	3
+Henrik	2
+Spieler0	2
+Henrik	2
+Spieler0	2
+Henrik	2
+Spieler0	2
+Computer	10
+Computer	8
