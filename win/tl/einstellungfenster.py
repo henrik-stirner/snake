@@ -110,7 +110,7 @@ class EinstellungFenster(Nebenfenster):
             for bezeichner in self.config[kategorie].keys():
                 if (bezeichner == "modus") and not (0 <= int(self.entries[i].get()) <= len(self.hauptfenster.modus_dropdown.cget("values"))-1):
                     logger.error(f"Ungültiger Modus: {self.entries[i].get()}")
-                    messagebox.showerror(f"Ungültiger Modus: {self.entries[i].get()}","Die Angegebene Option konnte nicht übernommen werden.")
+                    messagebox.showerror(f"Ungültiger Modus: {self.entries[i].get()}","Der angegebene Modus ist inexistent und konnte nicht übernommen werden.")
                     continue
 
                 self.config.set(kategorie, bezeichner, str(self.entries[i].get()))
