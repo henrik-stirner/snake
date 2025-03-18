@@ -1,6 +1,6 @@
 import logging
 
-from tkinter import BOTH, E, W
+from tkinter import BOTH, E, W, messagebox
 from tkinter.ttk import *
 
 # ----------
@@ -108,8 +108,23 @@ class EinstellungFenster(Nebenfenster):
         i = 0
         for kategorie in self.config.keys():
             for bezeichner in self.config[kategorie].keys():
+                if (bezeichner == "modus") and not (0 <= int(self.entries[i].get()) <= len(self.hauptfenster.modus_dropdown.cget("values"))-1):
+                    logger.error(f"Ungültiger Modus: {self.entries[i].get()}")
+                    messagebox.showerror(f"Ungültiger Modus: {self.entries[i].get()}","Die Angegebene Option konnte nicht übernommen werden.")
+                    continue
+
                 self.config.set(kategorie, bezeichner, str(self.entries[i].get()))
                 i += 1
 
         with open("config.ini", "w") as configfile:
             self.config.write(configfile)
+
+    def schliessen(self) -> None:
+        self.einstellungen_speichern()
+        self.destroy()
+
+        # neu starten, um die Einstellungen zu übernehmen
+        self.hauptfenster.wiederholen = True
+        # ohne, dass der Launcher den Modus durch den zuvor ausgewählten überschreibt
+        self.hauptfenster.running = False
+        self.hauptfenster.destroy()

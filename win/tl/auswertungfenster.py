@@ -127,7 +127,6 @@ class AuswertungFenster(Nebenfenster):
         """
 
         self.schliessen()
-        self.hauptfenster.running = False
         self.hauptfenster.schliessen()
 
     def score_speichern(self) -> None:

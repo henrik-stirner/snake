@@ -122,4 +122,3 @@ class Nebenfenster(Toplevel):
 
 		self.einstellungen_speichern()
 		self.destroy()
-		self.hauptfenster.deiconify()
