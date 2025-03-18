@@ -1,4 +1,3 @@
-from configparser import ConfigParser
 import logging
 
 from tkinter import X
@@ -6,7 +5,7 @@ from tkinter.ttk import *
 
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -23,7 +22,18 @@ from gme.obj.schlange import SchlangenKopf
 
 
 class AuswertungFenster(Nebenfenster):
-    def __init__(self, launcher_fenster, spiel) -> None:
+    """
+    Fenster, das nach Spielende die Auswertung anzeigt.
+    """
+
+    def __init__(self, launcher_fenster: object, spiel: object) -> None:
+        """
+        Initialisiert das Fenster.
+
+        :param launcher_fenster: zum Spielneustart nach dem Schließen dieses Fensters
+        :param spiel: Spiel-Objekt: notwendig zur Auswertung
+        """
+
         super().__init__(launcher_fenster)
         self.title("Auswertung")
 
@@ -33,7 +43,13 @@ class AuswertungFenster(Nebenfenster):
         self.interface_generieren()
         self.mainloop()
 
-    def interface_generieren(self):
+    def interface_generieren(self) -> None:
+        """
+        Generiert die Oberflaeche des Fensters.
+
+        :return:
+        """
+
         super().interface_generieren()
 
         # Datenermittlung (Auswertung)
@@ -93,22 +109,43 @@ class AuswertungFenster(Nebenfenster):
         self.beenden_knopf = Button(self.frame, style="Big.TButton", text="BEENDEN", command=self.abbruch)
         self.beenden_knopf.pack(fill=X)
 
-    def eingabe(self):
-        self.schliessen()
+    def eingabe(self) -> None:
+        """
+        Schließt das Fenster und startet das Spiel neu
+
+        :return:
+        """
+
         self.hauptfenster.wiederholen = True
-        self.hauptfenster.running = False
-        self.hauptfenster.schliessen()
+        self.abbruch()
 
-    def abbruch(self):
+    def abbruch(self) -> None:
+        """
+        Schließt das Fenster und beendet das Programm.
+
+        :return:
+        """
+
         self.schliessen()
         self.hauptfenster.running = False
         self.hauptfenster.schliessen()
 
-    def score_speichern(self):
+    def score_speichern(self) -> None:
+        """
+        Speichert die erzielten Scores in einer Textdatei.
+
+        :return:
+        """
+
         with open("scores.txt", "a") as f:
             f.writelines([f"\n{obj.name}\t{obj.laenge}" for obj in self.schlangen])
 
-    def schliessen(self):
-        self.score_speichern()
+    def schliessen(self) -> None:
+        """
+        Schließt das Fenster und speichert die Scores.
 
+        :return:
+        """
+
+        self.score_speichern()
         super().schliessen()

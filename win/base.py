@@ -7,7 +7,7 @@ from tkinter.ttk import *
 
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,18 @@ logger = logging.getLogger(__name__)
 
 
 class Hauptfenster(Tk):
+	"""
+	Grundklasse für Hauptfenster.
+	"""
+
 	def __init__(self) -> None:
+		"""
+		Initialisierung des Hauptfensters.
+		Das Stylesheet wird geladen.
+
+		:return:
+		"""
+
 		super().__init__()
 
 		self.tk.call("source", "./thema.tcl")
@@ -42,28 +53,70 @@ class Hauptfenster(Tk):
 		self.bind('<Key>', lambda event: self.taste(event))
 		self.bind('<Return>', lambda args: self.eingabe())
 
-	def interface_generieren(self):
+	def interface_generieren(self) -> None:
+		"""
+		Generiert das Interface.
+		Standardmäßig hat jedes Fenster einen leeren Frame,
+		denn die Hintergrundfarbe des Fensters selbst kann nicht per Stylesheet konfiguriert werden.
+
+		:return:
+		"""
+
 		self.background = Frame(self)
 		self.background.place(x=0, y=0, relwidth=1.0, relheight=1.0)
 
 		self.frame = Frame(self)
 		self.frame.pack(expand=True, fill=X)
 
-	def taste(self, event):
+	def taste(self, event: Event) -> None:
+		"""
+		Verarbeitung von Tastatureingaben.
+
+		:param event: Tkinter <Key> Event
+		:return:
+		"""
+
 		taste = event.char
 
 		if taste == "\x1b":  # Escape
 			self.abbruch()
 
-	def eingabe(self):
+	def eingabe(self) -> None:
+		"""
+		Entertaste standardmäßig unbelegt.
+		Zu überschreiben.
+
+		:return:
+		"""
+
 		pass
 
-	def abbruch(self):
+	def abbruch(self) -> None:
+		"""
+		Escape-Taste standardmäßig für:
+		Schließen des Fensters.
+
+		:return:
+		"""
+
 		self.schliessen()
 
-	def einstellungen_speichern(self):
+	def einstellungen_speichern(self) -> None:
+		"""
+		Speichert die Einstellungen in der Konfigurationsdatei.
+		Zu überschreiben.
+
+		:return:
+		"""
+
 		pass
 
-	def schliessen(self):
+	def schliessen(self) -> None:
+		"""
+		Schließt dieses Fenster.
+
+		:return:
+		"""
+
 		self.einstellungen_speichern()
 		self.destroy()

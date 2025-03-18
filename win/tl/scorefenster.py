@@ -1,11 +1,10 @@
-from configparser import ConfigParser
 import logging
 
-from tkinter import X, LEFT, RIGHT, CENTER, BOTH, E, W
+from tkinter import LEFT, RIGHT, BOTH, E, W
 from tkinter.ttk import *
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -21,14 +20,30 @@ from win.tl.base import Nebenfenster
 
 
 class ScoreFenster(Nebenfenster):
-    def __init__(self, launcher_fenster) -> None:
+    """
+    Highscore-Fenster
+    """
+
+    def __init__(self, launcher_fenster: object) -> None:
+        """
+        Initialisierung des Highscore-Fensters
+
+        :param launcher_fenster:
+        """
+
         super().__init__(launcher_fenster)
         self.title("Highscores")
     
         self.interface_generieren()
         self.mainloop()
 
-    def interface_generieren(self):
+    def interface_generieren(self) -> None:
+        """
+        Generiert das Interface des Highscore-Fensters
+        
+        :return:
+        """
+
         super().interface_generieren()
         self.frame.pack(expand=True, fill=BOTH)  # soll sich auch in y-Richtung ausdehnen
 
@@ -37,7 +52,7 @@ class ScoreFenster(Nebenfenster):
         self.info_label.pack(pady=20)
 
         # Ranking
-        self.ranking_frame = VerticalScrolledFrame(self.frame)
+        self.ranking_frame = VerticalScrolledFrame(self.frame)  # Überlauf in y-Richtung möglich
         self.ranking_frame.pack(expand=True, fill=BOTH)
 
         self.spieler_frame = Frame(self.ranking_frame.interior)

@@ -1,19 +1,27 @@
-from tkinter import Canvas, VERTICAL, BOTH, TOP, LEFT, RIGHT, FALSE, TRUE, NW, X, Y
+from tkinter import Canvas, VERTICAL, BOTH, LEFT, RIGHT, FALSE, TRUE, NW, Y
 from tkinter.ttk import *
 
 
 class VerticalScrolledFrame(Frame):
-    """A pure Tkinter scrollable frame that actually works!
+    """
+    A pure Tkinter scrollable frame that actually works!
 
     * Use the 'interior' attribute to place widgets inside the scrollable frame
     * Construct and pack/place/grid normally
     * This frame only allows vertical scrolling
 
     Kopiert aus: https://web.archive.org/web/20170514022131id_/http://tkinter.unpythonic.net/wiki/VerticalScrolledFrame
-
     """
 
     def __init__(self, parent, *args, **kw):
+        """
+        Initialisierung des vertikal scrollbaren Frames.
+
+        :param parent:
+        :param args:
+        :param kw:
+        """
+
         Frame.__init__(self, parent, *args, **kw)
 
         # Ergaenzung
@@ -46,6 +54,15 @@ class VerticalScrolledFrame(Frame):
         # track changes to the canvas and frame width and sync them,
         # also updating the scrollbar
         def _configure_interior(event):
+            """
+            Konfiguriert den inneren Frame.
+            Das Canvas-Objekt wird an die Größe des inneren Frames angepasst,
+            ebenso die Scrollbar des Canvas-Objekts.
+            .
+            :param event:
+            :return:
+            """
+
             # update the scrollbars to match the size of the inner frame
             size = (interior.winfo_reqwidth(), interior.winfo_reqheight())
             canvas.config(scrollregion=f"0 0 {size[0]} {size[1]}")
@@ -56,6 +73,15 @@ class VerticalScrolledFrame(Frame):
         interior.bind('<Configure>', _configure_interior)
 
         def _configure_canvas(event):
+            """
+            Konfiguriert das Canvas-Objekt.
+            Auch wenn sich das Canvas-Objekt ändert, wird der innere Frame angepasst,
+            nicht nur umgekehrt.
+
+            :param event:
+            :return:
+            """
+
             if interior.winfo_reqwidth() != canvas.winfo_width():
                 # update the inner frame's width to fill the canvas
                 canvas.itemconfigure(interior_id, width=canvas.winfo_width())

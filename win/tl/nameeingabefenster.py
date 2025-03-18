@@ -1,11 +1,10 @@
-from configparser import ConfigParser
 import logging
 
 from tkinter import X, messagebox
 from tkinter.ttk import *
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -20,7 +19,18 @@ from win.tl.base import Nebenfenster
 
 
 class NameEingabeFenster(Nebenfenster):
-	def __init__(self, spiel_fenster, spielerzahl: int = None) -> None:
+	"""
+	Fenster zur Eingabe der Spielernamen.
+	"""
+
+	def __init__(self, spiel_fenster: object, spielerzahl: int = None) -> None:
+		"""
+		Initiiert das Fenster zur Eingabe der Spielernamen.
+
+		:param spiel_fenster: zum Starten des Spiels über die entsprechende Schnittstelle (Funktion spiel_starten()
+		:param spielerzahl: die Spielerzahl entscheidet darüber, wie viele Namen eingegebene werden müssen
+		"""
+
 		super().__init__(spiel_fenster)
 		self.title("Namenseingabe")
 
@@ -29,7 +39,14 @@ class NameEingabeFenster(Nebenfenster):
 		self.interface_generieren(spielerzahl)
 		self.mainloop()
 
-	def interface_generieren(self, spielerzahl: int = None):
+	def interface_generieren(self, spielerzahl: int = None) -> None:
+		"""
+		Generiert das Interface des Namenseingabefensters.
+
+		:param spielerzahl:
+		:return:
+		"""
+
 		super().interface_generieren()
 
 		self.entry_frame = Frame(self.frame)
@@ -55,17 +72,35 @@ class NameEingabeFenster(Nebenfenster):
 		self.fertig_knopf = Button(self.knopf_frame, style="Big.TButton", text="FORTFAHREN", command=self.eingabe)
 		self.fertig_knopf.pack(fill=X)
 
-	def entry_erstellen(self):
+	def entry_erstellen(self) -> None:
+		"""
+		Erstellt ein Entry-Widget für die Eingabe eines Spielernamens.
+
+		:return:
+		"""
+
 		spieler_entry = Entry(self.entry_frame)
 		spieler_entry.pack(fill=X, pady=5)
 		self.entries.append(spieler_entry)
 
 		return spieler_entry
 
-	def namen(self):
+	def namen(self) -> list[str]:
+		"""
+		Gibt die eingegebenen Spielernamen zurück.
+
+		:return:
+		"""
+
 		return [entry.get() for entry in self.entries]
 
-	def eingabe(self):
+	def eingabe(self) -> None:
+		"""
+		Eingabe der Spielernamen überprüfen und ggf. Spiel starten.
+
+		:return:
+		"""
+
 		namen = []
 		for entry in self.entries:
 			if name := entry.get():
@@ -80,14 +115,36 @@ class NameEingabeFenster(Nebenfenster):
 		super().schliessen()
 		self.hauptfenster.spiel_starten(namen)
 
-	def abbruch(self):
+	def abbruch(self) -> None:
+		"""
+		Abbruch des Spielstarts.
+
+		:return:
+		"""
+
 		pass
 
-	def einstellungen_speichern(self):
+	def einstellungen_speichern(self) -> None:
+		"""
+		Speichert die Einstellungen in der Konfigurationsdatei.
+
+		:return:
+		"""
+
 		# Nutzernamen speichern
 		self.config.set("Spiel", "nutzername", str(self.entries[0].get()))
 		with open("config.ini", "w") as configfile:
 			self.config.write(configfile)
 
-	def schliessen(self):
+	def schliessen(self) -> None:
+		"""
+		Schließt das Fenster nicht.
+		Es soll nicht geschlossen werden, da die Eingabe der Spielernamen zwingend erforderlich ist.
+
+		Stattdessen soll das Spiel gestartet und
+		dann über den vorgesehenen Weg kontrolliert geschlossen oder neu gestartet werden.
+
+		:return:
+		"""
+
 		pass

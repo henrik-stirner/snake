@@ -1,11 +1,10 @@
-from configparser import ConfigParser
 import logging
 
-from tkinter import X, LEFT, RIGHT, CENTER, BOTH, E, W, Y
+from tkinter import BOTH, E, W
 from tkinter.ttk import *
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -21,7 +20,17 @@ from win.tl.base import Nebenfenster
 
 
 class EinstellungFenster(Nebenfenster):
-    def __init__(self, launcher_fenster) -> None:
+    """
+    Fenster für die Einstellungen des Programms
+    """
+
+    def __init__(self, launcher_fenster: object) -> None:
+        """
+        Initialisierung des Fensters.
+
+        :param launcher_fenster: zum Wiederanzeigen beim Schließen dieses Fensters
+        """
+
         super().__init__(launcher_fenster)
         self.title("Einstellungen")
 
@@ -30,7 +39,13 @@ class EinstellungFenster(Nebenfenster):
         self.interface_generieren()
         self.mainloop()
 
-    def interface_generieren(self):
+    def interface_generieren(self) -> None:
+        """
+        Generiert das Interface des Fensters.
+
+        :return:
+        """
+
         super().interface_generieren()
         self.frame.pack(expand=True, fill=BOTH)
 
@@ -65,7 +80,13 @@ class EinstellungFenster(Nebenfenster):
 
             i += 2
 
-    def einstellungen_speichern(self):
+    def einstellungen_speichern(self) -> None:
+        """
+        Speichert die Einstellungen in der config.ini-Datei.
+
+        :return:
+        """
+
         i = 0
         for kategorie in self.config.keys():
             for bezeichner in self.config[kategorie].keys():

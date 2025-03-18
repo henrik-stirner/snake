@@ -7,7 +7,7 @@ from tkinter.ttk import *
 
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,15 @@ from win.tl.spielfenster import SpielFenster
 
 
 class Launcher(Hauptfenster):
+    """
+    Launcher-Fenster, das vor dem Spielstart erscheint.
+    """
+
     def __init__(self) -> None:
+        """
+        Initialisiert das Launcher-Fenster.
+        """
+
         super().__init__()
         self.title("Launcher")
 
@@ -35,6 +43,12 @@ class Launcher(Hauptfenster):
         self.interface_generieren()
 
     def interface_generieren(self) -> None:
+        """
+        Generiert das Interface des Launcher-Fensters.
+
+        :return:
+        """
+
         super().interface_generieren()
         self.frame.pack(expand=True, fill=BOTH)  # soll sich auch in y-Richtung ausdehnen
 
@@ -105,26 +119,62 @@ class Launcher(Hauptfenster):
                 score_label.pack(expand=True, fill=X)
 
     def spiel_starten(self):
+        """
+        Startet das Spiel: Öffnet ein Spielfenster.
+
+        :return:
+        """
+
         self.withdraw()  # Launcher verstecken
         SpielFenster(self, self.modus_dropdown.get())
 
     def scores_anzeigen(self):
+        """
+        Öffnet ein Highscorefenster.
+
+        :return:
+        """
+
         self.withdraw()
         ScoreFenster(self)
 
     def einstellungen_anzeigen(self):
+        """
+        Öffnet ein Einstellungsfenster.
+
+        :return:
+        """
+
         self.withdraw()
         EinstellungFenster(self)
 
     def eingabe(self):
+        """
+        Enter-Taste startet das Spiel.
+
+        :return:
+        """
+
         self.spiel_starten()
 
     def einstellungen_speichern(self):
+        """
+        Moduswahl speichern
+
+        :return:
+        """
+
         # gewaehlten Modus speichern
         self.config.set("Spiel", "mode", str(self.modus_dropdown.current()))
         with open("config.ini", "w") as configfile:
             self.config.write(configfile)
 
     def schliessen(self):
+        """
+        benutzerdefinierte running-Flag auf False setzen, bevor das Tk-Objekt zerstört wird
+
+        :return:
+        """
+
         self.running = False
         super().schliessen()

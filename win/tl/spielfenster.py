@@ -1,11 +1,10 @@
-from configparser import ConfigParser
 import logging
 
-from tkinter import BOTH
+from tkinter import BOTH, Event
 from tkinter.ttk import *
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -29,7 +28,18 @@ from gme.simulation import SimulationSpiel
 
 
 class SpielFenster(Nebenfenster):
-    def __init__(self, launcher_fenster, spielart) -> None:
+    """
+    Fenster, in dem das Spiel stattfindet. (Spielfeld)
+    """
+
+    def __init__(self, launcher_fenster: object, spielart: str) -> None:
+        """
+        Initialisiert das SpielFenster.
+
+        :param launcher_fenster:
+        :param spielart:
+        """
+
         super().__init__(launcher_fenster)
         self.title(f"{spielart}")
 
@@ -41,7 +51,7 @@ class SpielFenster(Nebenfenster):
         self.spielart = spielart
         self.spiel = None
 
-        # modifizierte Hauptschleife, die auch Spiellogik ausfuehrt
+        # modifizierte Hauptschleife, die auch Spiellogik ausführt
         self.running = True
         self.hauptschleife_id = None
 
@@ -52,7 +62,7 @@ class SpielFenster(Nebenfenster):
                 if name := self.config["Spiel"]["nutzername"]:
                     self.spiel_starten([name])
                 else:
-                    NameEingabeFenster(self, 1)
+                    NameEingabeFenster(self, 1)  # das NameEingabeFenster ruft bei Beendung der eingabe dann spiel_starten() auf
             case "Mehrspieler":
                 NameEingabeFenster(self, 2)
             case "Wandlos":
@@ -63,7 +73,14 @@ class SpielFenster(Nebenfenster):
                 self.spiel_starten(None)
 
 
-    def spiel_starten(self, namen: list[str] = None):
+    def spiel_starten(self, namen: list[str] = None) -> None:
+        """
+        Startet das Spiel mit den gegebenen Namen.
+
+        :param namen: Liste der Namen der Spieler
+        :return:
+        """
+
         match self.spielart:
             case "Klassisch":
                 self.spiel = KlassischesSpiel(self, *namen)
@@ -78,7 +95,15 @@ class SpielFenster(Nebenfenster):
 
         self.hauptschleife()
 
-    def taste(self, event):
+    def taste(self, event: Event) -> None:
+        """
+        Verarbeitet die Tastatureingaben.
+        Tastatureingaben sollen an das Spiel weitergeleitet werden, sodass Benutzerinteraktion möglich ist.
+
+        :param event: Tkinter <Key> Event
+        :return:
+        """
+
         taste = event.char
 
         if taste == "\x1b":  # Escape
@@ -91,7 +116,13 @@ class SpielFenster(Nebenfenster):
 
         logger.debug(f"{taste} {taste in self.spiel.erlaubte_eingaben}")
 
-    def interface_generieren(self):
+    def interface_generieren(self) -> None:
+        """
+        Generiert die Oberfläche des SpielFensters.
+
+        :return:
+        """
+
         super().interface_generieren()
         self.frame.pack(expand=True, fill=BOTH)  # soll sich auch in y-Richtung ausdehnen
 
@@ -101,29 +132,45 @@ class SpielFenster(Nebenfenster):
         self.spielfeld.grid_rowconfigure(tuple(range(self.h)), weight=1)
         self.spielfeld.pack(expand=True, fill=BOTH)
 
-        # Farbe der Labels beim Hovern veraender, sodass man das Raster besser erkennen kann (interaktiver)
-        mod = 0x111111  # Unterschied zwischen den Farben
-
         for x in range(self.w):
             for y in range(self.h):
                 kachel = Label(self.spielfeld)
                 kachel.grid(column=x, row=y, sticky="NESW")
                 self.kacheln[x][y] = kachel
 
-    def _kachel(self, column: int, row: int):
+    def _kachel(self, column: int, row: int) -> None:
+        """
+        Gibt das Widget in der Zelle (column, row) zurück.
+        Derzeit nicht in verwendung. Suboptimale Lösung, da jedes Mal ein Suchvorgang stattfindet.
+
+        :param column: Reihennummer
+        :param row: Spaltennummer
+        :return:
+        """
+
         try:
             # Es gibt nur ein Objekt in der Zelle, und das ist der Frame.
             return self.spielfeld.grid_slaves(column=column, row=row)[0]
         except Exception as e:
             logger.exception(e)
 
-    def kachel_faerben(self, x, y, farbe):
+    def kachel_faerben(self, x: int, y: int, farbe: str) -> None:
+        """
+        Faerbt die Kachel (x, y) in der gegebenen Farbe.
+
+        :param x: x-Koordinate
+        :param y: y-Koordinate
+        :param farbe: Farbe
+        :return:
+        """
+
         if not ((0 <= x <= self.w - 1) and (0 <= y <= self.h - 1)):
             logger.warning(f"Kachel ({x}, {y}) liegt außerhalb des Spielfelds")
             return
 
-        # Manchmal gibt es hier Probleme mit persistenten referenzen von Widgets seitens tcl
+        # Manchmal gibt es hier Probleme mit persistenten referenzen von Widgets seitens tcl.
         # Die entsprechenden Objekte werden womöglich nicht sachgemäß vom Garbage Collector gelöscht?
+        # Daher wird das Spiel nach Beendung auch vollständig neu gestartet.
         try:
             kachel = self.kacheln[x][y]
             if kachel and kachel.winfo_exists():
@@ -133,7 +180,13 @@ class SpielFenster(Nebenfenster):
         except Exception as e:
             logger.exception(f"self.kacheln : {e}")
 
-    def hauptschleife(self):
+    def hauptschleife(self) -> None:
+        """
+        Hauptschleife des Spiels. Wird in einem separaten Thread ausgeführt.
+
+        :return:
+        """
+
         if self.running:
             try:
                 self.spiel.aktualisieren()
@@ -144,15 +197,34 @@ class SpielFenster(Nebenfenster):
             # separater Thread, um mainloop nicht zu blockieren
             self.hauptschleife_id = self.after(int(float(self.spiel.delay) * 500), self.hauptschleife)
     
-    def pausieren(self):
+    def pausieren(self) -> None:
+        """
+        Pausiert das Spiel.
+
+        :return:
+        """
+
         PauseFenster(self)
 
-    def schliessen(self):
+    def schliessen(self) -> None:
+        """
+        Plant das tatsächliche Schliessen, sodass die (separate) Hauptschleife nicht mehr läuft,
+        wenn die dort referenzierten Objekte bereits gelöscht wurden.
+
+        :return:
+        """
+
         self.running = False
-        # hauptschleifen (Thread) auslaufen lassen, sodass keine geloeschten Variablen referenziert werden
+        # Hauptschleife (Thread) auslaufen lassen, sodass keine gelöschten Variablen referenziert werden
         self.after(100, self._schliessen)
 
-    def _schliessen(self):
+    def _schliessen(self) -> None:
+        """
+        Schließt das SpielFenster und öffnet das Auswertungsfenster.
+
+        :return:
+        """
+
         self.destroy()
         AuswertungFenster(self.hauptfenster, self.spiel)
 

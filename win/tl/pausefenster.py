@@ -1,4 +1,3 @@
-from configparser import ConfigParser
 import logging
 
 from tkinter import X
@@ -6,7 +5,7 @@ from tkinter.ttk import *
 
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -17,12 +16,21 @@ logger = logging.getLogger(__name__)
 
 from win.tl.base import Nebenfenster
 
-
 # ----------
 
 
 class PauseFenster(Nebenfenster):
-    def __init__(self, spiel_fenster) -> None:
+    """
+    Fenster, das angezeigt wird, wenn das Spiel pausiert wird.
+    """
+
+    def __init__(self, spiel_fenster: object) -> None:
+        """
+        Initialisierung des Fensters.
+
+        :param spiel_fenster:
+        """
+
         super().__init__(spiel_fenster)
         self.title("Pause")
 
@@ -31,7 +39,13 @@ class PauseFenster(Nebenfenster):
         self.interface_generieren()
         self.mainloop()
 
-    def interface_generieren(self):
+    def interface_generieren(self) -> None:
+        """
+        Generiert das Interface des Fensters.
+
+        :return:
+        """
+
         super().interface_generieren()
 
         # Fortfahren-Knopf
@@ -41,11 +55,24 @@ class PauseFenster(Nebenfenster):
         self.beenden_knopf = Button(self.frame, style="Big.TButton", text="BEENDEN", command=self.abbruch)
         self.beenden_knopf.pack(fill=X)
     
-    def eingabe(self):
+    def eingabe(self) -> None:
+        """
+        Wird aufgerufen, wenn der Fortfahren-Knopf oder die Enter-Taste gedrückt wird.
+
+        :return:
+        """
+
         self.schliessen()
         self.hauptfenster.running = True
         self.hauptfenster.hauptschleife()
 
-    def abbruch(self):
+    def abbruch(self) -> None:
+        """
+        Wird aufgerufen, wenn der Beenden-Knopf oder die Escape-Taste gedrückt wird.
+        In diesem Fall soll auch das Spiel beendet, also das Hauptfenster geschlossen werden.
+
+        :return:
+        """
+
         self.schliessen()
         self.hauptfenster.schliessen()

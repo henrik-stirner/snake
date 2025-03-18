@@ -6,7 +6,7 @@ from random import randint
 
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,17 @@ from gme.obj.schlange import SchlangenKopf
 
 
 class Spiel:
-    def __init__(self, spiel_fenster):
+    """
+    Das Spiel. Ich hab daran gedacht.
+    """
+
+    def __init__(self, spiel_fenster: object) -> None:
+        """
+        Initialisiert ein Spiel.
+
+        :param spiel_fenster: SpielFenster, in dem das Spiel stattfindet. Umfasst die entsprechenden Schnittstellen für die Darstellung und Eingabe.
+        """
+
         self.config = ConfigParser()
         self.config.read("./config.ini")
 
@@ -33,7 +43,13 @@ class Spiel:
 
         self.spiel_fenster = spiel_fenster
 
-    def aktualisieren(self):
+    def aktualisieren(self) -> None:
+        """
+        Aktualisiert das Spiel, indem alle Spielobjekte aktualisiert und neu gezeichnet werden.
+
+        :return:
+        """
+
         for spielobjekt in self.spielobjekte:
             if spielobjekt.tot and not isinstance(spielobjekt, SchlangenKopf):
                 self.spielobjekte.remove(spielobjekt)
@@ -48,23 +64,52 @@ class Spiel:
         for spielobjekt in self.spielobjekte:
             spielobjekt.malen()
 
-    def eingabe_verarbeiten(self, eingabe):
+    def eingabe_verarbeiten(self, eingabe: str) -> None:
+        """
+        Verarbeitet eine Eingabe. Diese Methode soll von Unterklassen überschrieben werden.
+
+        :param eingabe: Tastenbezeichner, i. d. R. Buchstabe
+        :return:
+        """
+
         pass
 
-    def zufaellige_kachel(self):
+    def zufaellige_kachel(self) -> tuple[int, int]:
+        """
+        Gibt Koordinaten einer zufälligen Kachel zurück.
+
+        :return: K(x|y)
+        """
+
         x = randint(0, self.spiel_fenster.w-1)
         y = randint(0, self.spiel_fenster.h-1)
 
         return x, y
 
-    def kachel_frei(self, x, y):
+    def kachel_frei(self, x: int, y: int) -> bool:
+        """
+        Überprüft, ob die Kachel bei den Koordinaten x und y frei ist.
+
+        :param x: x-Koordinate
+        :param y: y-Koordinate
+        :return:
+        """
+
         for spielobjekt in self.spielobjekte:
             if x == spielobjekt.x and y == spielobjekt.y:
                 return False
 
         return True
 
-    def objekte_auf_kachel(self, x, y):
+    def objekte_auf_kachel(self, x: int, y: int) -> list[object]:
+        """
+        Gibt eine Liste von Spielobjekten zurück, die sich auf der Kachel bei den Koordinaten x und y befinden
+
+        :param x: x-Koordinate
+        :param y: y-Koordinate
+        :return:
+        """
+
         objekte = []
 
         for spielobjekt in self.spielobjekte:
@@ -73,10 +118,27 @@ class Spiel:
 
         return objekte
 
-    def instanz_auf_kachel(self, x, y, typ: Type):
+    def instanz_auf_kachel(self, x: int, y: int, typ: Type) -> bool:
+        """
+        Überprüft, ob sich ein Objekt des Typs typ auf der Kachel bei den Koordinaten x und y befindet.
+
+        :param x: x-Koordinate
+        :param y: y-Koordinate
+        :param typ: Klasse bzw. Objekt des Typs Typ o. Metaklasse etc.
+        :return:
+        """
+
         return any([isinstance(obj, typ) for obj in self.objekte_auf_kachel(x, y)])
 
-    def kachel_begehbar(self, x, y):
+    def kachel_begehbar(self, x: int, y: int) -> bool:
+        """
+        Überprüft, ob die Kachel bei den Koordinaten x und y begehbar (frei von Objekten) ist.
+
+        :param x: x-Koordinate
+        :param y: y-Koordinate
+        :return:
+        """
+
         if not ((0 <= x <= self.spiel_fenster.w - 1) and (0 <= y <= self.spiel_fenster.h - 1)):
             # nicht auf Spielfeld
             return False
@@ -86,7 +148,13 @@ class Spiel:
 
         return True
 
-    def zufaellige_freie_kachel(self):
+    def zufaellige_freie_kachel(self) -> tuple[int, int]:
+        """
+        Gibt die Koordinaten einer zufälligen freien Kachel zurück.
+
+        :return:
+        """
+
         x, y = self.zufaellige_kachel()
         # TODO: Was, wenn kein Feld mehr frei ist?
         while not self.kachel_frei(x, y):

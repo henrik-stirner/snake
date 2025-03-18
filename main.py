@@ -1,4 +1,3 @@
-from configparser import ConfigParser
 import logging.config
 from os import walk, remove, system, path, mkdir
 from datetime import datetime
@@ -71,10 +70,17 @@ from win.launcher import Launcher
 # ----------
 
 
-script = __file__
+script = __file__  # Pfad zu diesem Skript
 
 
 def main():
+    """
+    Startet den Launcher und führt das Spiel aus.
+    Soll das Spiel wiederholt werden, startet sich dieses Skript erneut.
+
+    :return:
+    """
+
     launcher = Launcher()
     while launcher.running:
         launcher.update()

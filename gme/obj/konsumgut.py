@@ -1,10 +1,9 @@
 from typing import *
-from configparser import ConfigParser
 import logging
 
 
 # ----------
-# config und logger
+# logger
 # ----------
 
 logger = logging.getLogger(__name__)
@@ -19,24 +18,61 @@ from gme.obj.base import SpielObjekt
 
 
 class Konsumgut(SpielObjekt):
-    def __init__(self, spiel, x, y, farbe, wertigkeit, lebensdauer=None):
+    """
+    konsumierbares SpielObjekt einer bestimmten Wertigkeit
+    """
+
+    def __init__(self, spiel: object, x: int, y: int, farbe: str, wertigkeit: int, lebensdauer: int = None) -> None:
+        """
+        Initialisiert ein neues Konsumgut.
+
+        :param spiel: Spiel, in dem das Objekt existieren soll
+        :param x: x-Koordinate
+        :param y: y-Koordinate
+        :param farbe: Farbe des Objekts
+        :param wertigkeit: Wertigkeit des Konsumguts (um wie viel sich die Schlange durch den Konsum verlängert)
+        :param lebensdauer: Lebensdauer des Objekts in Zyklen (Aktualisierungen des Spielfelds). Standard: None (unendlich)
+        """
+
         super().__init__(spiel, x, y, farbe, 0, lebensdauer=lebensdauer)
 
         self.aktive_farbe = farbe
         self.konsumiert = False
         self.wertigkeit = wertigkeit
 
-    def malen(self):
-        self.farbe = self.aktive_farbe if not self.konsumiert else "black"
+    def malen(self) -> None:
+        """
+        Wenn das Konsumgut gegessen wurde, wird es schwarz dargestellt.
+        :return:
+        """
 
+        self.farbe = self.aktive_farbe if not self.konsumiert else "black"
         super().malen()
 
 
 class Apfel(Konsumgut):
-    def __init__(self, spiel, x, y):
+    """
+    Konsumgut der Wertigkeit 1 und der Farbe "red"
+    """
+
+    def __init__(self, spiel: object, x: int, y: int) -> None:
+        """
+        Initialisiert einen neuen Apfel.
+
+        :param spiel:
+        :param x:
+        :param y:
+        """
+
         super().__init__(spiel, x, y, "red", 1)
 
-    def aktualisieren(self):
+    def aktualisieren(self) -> None:
+        """
+        Wenn der Apfel konsumiert wurde, wird er auf eine zufällige freie Kachel gesetzt und wieder aktiviert.
+
+        :return:
+        """
+
         if self.konsumiert:
             self.x, self.y = self.spiel.zufaellige_freie_kachel()
             self.konsumiert = False

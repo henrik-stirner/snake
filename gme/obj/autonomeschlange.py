@@ -1,5 +1,4 @@
 from typing import *
-from configparser import ConfigParser
 import logging
 
 import math
@@ -23,13 +22,44 @@ from gme.obj.schlange import SchlangenKopf
 
 
 class AutonomerSchlangenKopf(SchlangenKopf):
-    def __init__(self, spiel, x, y, richtung, laenge, farbe="darkblue", name="Computer", lebensdauer=None):
+    """
+    computergesteuerter Schlangenkopf, der von sich aus eine sinnvolle Bewegungsrichtung ermittelt
+    """
+
+    def __init__(self, spiel: object, x: int, y: int, richtung: tuple[int, int], laenge: int = 0, farbe: str = "darkblue", name: str = "Computer", lebensdauer: int = None) -> None:
+        """
+        Initialisiert ein neuen AutonomenSchlangenkopf.
+
+        :param spiel: Spiel, in dem das Objekt existieren soll
+        :param x: x-Koordinate
+        :param y: y-Koordinate
+        :param richtung: 2d-Richtungsvektor, in welche sich das Objekt bewegen soll [z.B. (1, 0) für rechts]
+        :param laenge: Länge der Schlange
+        :param farbe: Farbe des Objekts. Standard: "darkblue". Vorzugsweise eine dunkle Farbe (Glieder standardmäßig heller, z.B. "blue").
+        :param name: Name des Objekts. Standard: "Computer" Normalerweise (SchlangenKopf): Spielername
+        :param lebensdauer: Lebensdauer des Objekts in Zyklen (Aktualisierungen des Spielfelds). Standard: None (unendlich)
+        """
+
         super().__init__(name, spiel, x, y, richtung, laenge, farbe, lebensdauer)
     
-    def abstand(self, obj): 
+    def abstand(self, obj: object) -> float:
+        """
+        Berechnet den Abstand zu einem anderen Objekt.
+
+        :param obj: Anderes SpielObjekt
+        :return: Abstand
+        """
+
         return math.sqrt((obj.x - self.x)**2 + (obj.y - self.y)**2)
     
-    def denken(self):
+    def denken(self) -> None:
+        """
+        Es wird eine günstige Richtung für den nächsten Zug ermittelt und gesetzt.
+        Tödliche Richtungen werden vermieden; Ziel ist das Erreichen von Konsumgütern.
+
+        :return:
+        """
+
         # ----------
         # Nicht sterben!
         # ----------
@@ -74,7 +104,7 @@ class AutonomerSchlangenKopf(SchlangenKopf):
             ertragreiche_richtungen.append((0, 1 if dy > 0 else -1))
 
         # ----------
-        # Also... Wohin jetzt?
+        # Zusammenführen der Informationen (und setzen der Richtung)
         # ----------
 
         guenstige_richtungen = [richtung for richtung in ertragreiche_richtungen if not richtung in verbotene_richtungen]
@@ -88,8 +118,14 @@ class AutonomerSchlangenKopf(SchlangenKopf):
             self.richtung = random.choice(verbleibende_richtungen)
             return
 
-        # Ab hier sieht es schlecht aus..
+        # Ab hier sieht es schlecht aus für den Schlangenkopf.
 
-    def aktualisieren(self):
+    def aktualisieren(self) -> None:
+        """
+        Der Schlangenkopf ermittelt eine sinnvolle Bewegungsrichtung.
+
+        :return:
+        """
+
         self.denken()
         super().aktualisieren()
