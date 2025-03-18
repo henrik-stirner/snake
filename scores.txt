@@ -242,3 +242,15 @@ Computer	8
 Henrik	6
 Henrik	5
 Computer	5
+Computer	15
+Henrik	8
+Henrik	2
+Computer	2
+Henrik	2
+Computer	2
+Computer	7
+Henrik	4
+Computer	5
+Henrik	2
+Henrik	2
+Computer	2

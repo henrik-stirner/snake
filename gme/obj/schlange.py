@@ -120,25 +120,29 @@ class SchlangenKopf(SpielObjekt):
             neues_schlangenglied = SchlangenGlied(self.spiel, self, self.gliedfarbe, self.laenge)
             self.spiel.spielobjekte.append(neues_schlangenglied)
 
-        # Bewegen: NACH SCHLANGENGLIED UND KONSUM
-        self.x += self.richtung[0]
-        self.y += self.richtung[1]
+        # Bewegen?
+        nx = self.x + self.richtung[0]
+        ny = self.y + self.richtung[1]
 
         # EIN FELD WEITER
 
-        if not all([isinstance(obj, Konsumgut) or obj == self for obj in self.spiel.objekte_auf_kachel(self.x, self.y)]):
+        if not all([isinstance(obj, Konsumgut) or obj == self for obj in self.spiel.objekte_auf_kachel(nx, ny)]):
             # in Schlange gefahren
             self.tot = True
         elif self.wand_teleport:
-            if self.x < 0:
-                self.x = self.spiel.spiel_fenster.w - 1
-            elif self.x > self.spiel.spiel_fenster.w - 1:
-                self.x = 0
-            if self.y < 0:
-                self.y = self.spiel.spiel_fenster.h - 1
-            elif self.y > self.spiel.spiel_fenster.h - 1:
-                self.y = 0
-        elif not (0 <= self.x <= self.spiel.spiel_fenster.w - 1) or not (0 <= self.y <= self.spiel.spiel_fenster.h - 1):
+            if nx < 0:
+                nx = self.spiel.spiel_fenster.w - 1
+            elif nx > self.spiel.spiel_fenster.w - 1:
+                nx = 0
+            if ny < 0:
+                ny = self.spiel.spiel_fenster.h - 1
+            elif ny > self.spiel.spiel_fenster.h - 1:
+                ny = 0
+        elif not (0 <= nx <= self.spiel.spiel_fenster.w - 1) or not (0 <= ny <= self.spiel.spiel_fenster.h - 1):
             self.tot = True
+
+        if not self.tot:
+            # Die Schlange soll das Spielfeld auch im toten Zustand nicht verlassen können.
+            self.x, self.y = nx, ny
 
         super().aktualisieren()
