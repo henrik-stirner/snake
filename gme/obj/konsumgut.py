@@ -59,9 +59,9 @@ class Apfel(Konsumgut):
         """
         Initialisiert einen neuen Apfel.
 
-        :param spiel:
-        :param x:
-        :param y:
+        :param spiel: Spiel, in dem das Objekt existieren soll
+        :param x: x-Koordinate
+        :param y: y-Koordinate
         """
 
         super().__init__(spiel, x, y, "red", 1)
@@ -74,7 +74,11 @@ class Apfel(Konsumgut):
         """
 
         if self.konsumiert:
-            self.x, self.y = self.spiel.zufaellige_freie_kachel()
+            nx, ny = self.spiel.zufaellige_freie_kachel()
+            if nx is None:
+                self.spiel.spiel_beenden()
+                return
+
             self.konsumiert = False
         
         super().aktualisieren()

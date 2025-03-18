@@ -148,17 +148,40 @@ class Spiel:
 
         return True
 
-    def zufaellige_freie_kachel(self) -> tuple[int, int]:
+    def alle_kacheln_belegt(self) -> bool:
         """
-        Gibt die Koordinaten einer zufälligen freien Kachel zurück.
+        Prüft, ob es noch mindestens eine freie Kachel auf dem Spielfeld gibt.
+
+        :return:
+        """
+
+        for x in self.spiel_fenster.w:
+            for y in self.spiel_fenster.h:
+                if self.kachel_fre(x, y):
+                    return False
+
+        return True
+
+    def zufaellige_freie_kachel(self) -> tuple[int, int] | tuple[None, None]:
+        """
+        Gibt die Koordinaten einer zufälligen freien Kachel zurück, falls es noch eine gibt.
 
         :return:
         """
 
         x, y = self.zufaellige_kachel()
-        # TODO: Was, wenn kein Feld mehr frei ist?
+
+        versuch = 1
         while not self.kachel_frei(x, y):
+            if versuch == 10:
+                if self.alle_kacheln_belegt():  # nur Pech? aufwendiger Test...
+                    return None, None
+
+                # andernfalls versuch += 1 also == 11, d.h. es wird kein zweites Mal geprüft
+
             x, y = self.zufaellige_kachel()
+            versuch += 1
+
 
         return x, y
 
