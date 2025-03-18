@@ -35,6 +35,8 @@ class Nebenfenster(Toplevel):
 		:return:
 		"""
 
+		hauptfenster.withdraw()
+
 		super().__init__(hauptfenster)
 
 		self.hauptfenster = hauptfenster
@@ -122,3 +124,4 @@ class Nebenfenster(Toplevel):
 
 		self.einstellungen_speichern()
 		self.destroy()
+		self.hauptfenster.deiconify()

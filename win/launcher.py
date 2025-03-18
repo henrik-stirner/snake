@@ -125,7 +125,6 @@ class Launcher(Hauptfenster):
         :return:
         """
 
-        self.withdraw()  # Launcher verstecken
         SpielFenster(self, self.modus_dropdown.get())
 
     def scores_anzeigen(self):
@@ -135,7 +134,6 @@ class Launcher(Hauptfenster):
         :return:
         """
 
-        self.withdraw()
         ScoreFenster(self)
 
     def einstellungen_anzeigen(self):
@@ -145,7 +143,6 @@ class Launcher(Hauptfenster):
         :return:
         """
 
-        self.withdraw()
         EinstellungFenster(self)
 
     def eingabe(self):
