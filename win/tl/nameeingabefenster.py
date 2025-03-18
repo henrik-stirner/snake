@@ -116,7 +116,8 @@ class NameEingabeFenster(Nebenfenster):
 				messagebox.showerror("Leeres Eingabefeld", "Bitte tragen Sie für jeden Spieler einen alphanumerischen Namen ein.")
 				return
 
-		super().schliessen()
+		self.einstellungen_speichern()
+		self.destroy()
 		self.hauptfenster.spiel_starten(namen)
 
 	def abbruch(self) -> None:

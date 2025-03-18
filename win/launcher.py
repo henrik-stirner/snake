@@ -161,6 +161,9 @@ class Launcher(Hauptfenster):
         :return:
         """
 
+        # Der Laucher wird stets als letztes Fenster geschlossen - die Einstellungen können sich verändert haben.
+        self.config.read("./config.ini")
+
         # gewaehlten Modus speichern
         self.config.set("Spiel", "modus", str(self.modus_dropdown.current()))
         with open("config.ini", "w") as configfile:
