@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 # ----------
 
 from win.element.frame import VerticalScrolledFrame
+from win.element.entry import register, alphabetic, numeric, alphanumeric
+
 from win.tl.base import Nebenfenster
 
 # ----------
@@ -33,6 +35,10 @@ class EinstellungFenster(Nebenfenster):
 
         super().__init__(launcher_fenster)
         self.title("Einstellungen")
+
+        self.ALPHABETIC = register(self, alphabetic)
+        self.NUMERIC = register(self, numeric)
+        self.ALPHANUMERIC = register(self, alphanumeric)
 
         self.entries = []
 
@@ -72,7 +78,19 @@ class EinstellungFenster(Nebenfenster):
             for bezeichner, parameter in self.config[kategorie].items():
                 info_label = Label(info_frame, text=bezeichner, anchor=E)
                 info_label.pack(anchor=E, expand=True)
-                einstellung_entry = Entry(einstellung_frame)
+
+                validatecommand = None
+                if bezeichner == "nutzername":
+                    validatecommand = self.ALPHANUMERIC
+                elif parameter.isdigit():
+                    validatecommand = self.NUMERIC
+                elif parameter.isalpha():
+                    validatecommand = self.ALPHABETIC
+                elif parameter.isalnum():
+                    validatecommand = self.ALPHANUMERIC
+                assert validatecommand is not None, f"Keine Validierung für {bezeichner} gefunden."
+
+                einstellung_entry = Entry(einstellung_frame, validate="all", validatecommand=validatecommand)
                 einstellung_entry.insert(0, parameter)
                 einstellung_entry.pack(pady=5, expand=True, anchor=W)
 

@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 # eigene imports
 # ----------
 
+from win.element.entry import register, alphanumeric
+
 from win.tl.base import Nebenfenster
 
 # ----------
@@ -33,6 +35,8 @@ class NameEingabeFenster(Nebenfenster):
 
 		super().__init__(spiel_fenster)
 		self.title("Namenseingabe")
+
+		self.ALPHANUMERIC = register(self, alphanumeric)
 
 		self.entries = []
 
@@ -72,14 +76,14 @@ class NameEingabeFenster(Nebenfenster):
 		self.fertig_knopf = Button(self.knopf_frame, style="Big.TButton", text="FORTFAHREN", command=self.eingabe)
 		self.fertig_knopf.pack(fill=X)
 
-	def entry_erstellen(self) -> None:
+	def entry_erstellen(self) -> Entry:
 		"""
 		Erstellt ein Entry-Widget für die Eingabe eines Spielernamens.
 
 		:return:
 		"""
 
-		spieler_entry = Entry(self.entry_frame)
+		spieler_entry = Entry(self.entry_frame, validate="all", validatecommand=self.ALPHANUMERIC)
 		spieler_entry.pack(fill=X, pady=5)
 		self.entries.append(spieler_entry)
 

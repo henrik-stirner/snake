@@ -195,7 +195,7 @@ class SpielFenster(Nebenfenster):
                 logger.error(e)
 
             # separater Thread, um mainloop nicht zu blockieren
-            self.hauptschleife_id = self.after(int(float(self.spiel.delay) * 500), self.hauptschleife)
+            self.hauptschleife_id = self.after(self.spiel.delay, self.hauptschleife)
     
     def pausieren(self) -> None:
         """
