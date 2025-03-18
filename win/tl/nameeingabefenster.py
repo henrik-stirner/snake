@@ -118,6 +118,7 @@ class NameEingabeFenster(Nebenfenster):
 
 		self.einstellungen_speichern()
 		self.destroy()
+		self.hauptfenster.deiconify()
 		self.hauptfenster.spiel_starten(namen)
 
 	def abbruch(self) -> None:
