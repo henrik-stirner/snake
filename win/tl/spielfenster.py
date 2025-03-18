@@ -57,21 +57,15 @@ class SpielFenster(Nebenfenster):
 
         self.interface_generieren()
 
-        match spielart:
-            case "Klassisch":
+        if spielart == "Simulation":
+            self.spiel_starten(None)
+        elif spielart in ["Klassisch", "Wandlos", "Gegen Computer"]:
                 if name := self.config["Spiel"]["nutzername"]:
                     self.spiel_starten([name])
                 else:
-                    NameEingabeFenster(self, 1)  # das NameEingabeFenster ruft bei Beendung der eingabe dann spiel_starten() auf
-            case "Mehrspieler":
-                NameEingabeFenster(self, 2)
-            case "Wandlos":
-                NameEingabeFenster(self, 1)
-            case "Gegen Computer": 
-                NameEingabeFenster(self, 1)
-            case "Simulation":
-                self.spiel_starten(None)
-
+                    NameEingabeFenster(self, 1)  # Das NameEingabeFenster ruft nach dem Beenden der Eingabe dann spiel_starten() auf.
+        elif spielart == "Mehrspieler":
+            NameEingabeFenster(self, 2)
 
     def spiel_starten(self, namen: list[str] = None) -> None:
         """
