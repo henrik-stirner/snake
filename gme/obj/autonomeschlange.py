@@ -99,10 +99,10 @@ class AutonomerSchlangenKopf(SchlangenKopf):
             # Entfernung -> Richtung
             dx, dy = ziel.x - self.x, ziel.y - self.y
             # horizontal
-            if dx > 0:
+            if abs(dx) > 0:
                 ertragreiche_richtungen.append((1 if dx > 0 else -1, 0))
             # vertikal
-            if dy > 0:
+            if abs(dy) > 0:
                 ertragreiche_richtungen.append((0, 1 if dy > 0 else -1))
 
         # ----------

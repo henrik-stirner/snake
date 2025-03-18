@@ -240,3 +240,5 @@ Henrik	10
 Henrik	23
 Computer	8
 Henrik	6
+Henrik	5
+Computer	5
