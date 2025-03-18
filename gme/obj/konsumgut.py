@@ -78,6 +78,7 @@ class Apfel(Konsumgut):
             if nx is None:
                 self.spiel.spiel_beenden()
                 return
+            self.x, self.y = nx, ny
 
             self.konsumiert = False
         
